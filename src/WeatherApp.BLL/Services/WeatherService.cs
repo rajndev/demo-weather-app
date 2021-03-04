@@ -1,14 +1,23 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Globalization;
 using System.Threading.Tasks;
 using WeatherApp.BLL.HelperClasses;
 using WeatherApp.BLL.Interfaces;
+using WeatherApp.BLL.Models;
 
 namespace WeatherApp.BLL.Services
 {
     public class WeatherService : IWeatherService
     {
-        public WeatherAPIProcessor APIProcessorSingleton = WeatherAPIProcessor.GetInstance();
+
+        private readonly IMapper _mapper;
+        private WeatherAPIProcessor APIProcessorSingleton = WeatherAPIProcessor.GetInstance();
+        public WeatherService(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
         public async Task<object> GetCurrentWeather(string cityName, string apiKey)
         {
             APIProcessorSingleton.BaseAPIUrl = BaseAPIUrls.GET_CURRENT_WEATHER;
@@ -24,19 +33,22 @@ namespace WeatherApp.BLL.Services
                 else
                 {
                     var currentWeatherCast = (WeatherInfoRoot)currentWeather;
+
+                    var currentWeatherDTO = _mapper.Map<WeatherInfoDTO>(currentWeatherCast);
+
                     var currentDateTime = GetDateTimeFromEpoch(currentWeatherCast.Sys.Sunrise, currentWeatherCast.Sys.Sunset, currentWeatherCast.Dt);
 
-                    currentWeatherCast.CurrentDate = currentDateTime.Item1;
-                    currentWeatherCast.CurrentTime = currentDateTime.Item2;
-                    currentWeatherCast.isDayTime = currentDateTime.Item3;
+                    currentWeatherDTO.CityDate = currentDateTime.Item1;
+                    currentWeatherDTO.CityTime = currentDateTime.Item2;
+                    currentWeatherDTO.IsDayTime = currentDateTime.Item3;
 
                     //capitalize each word in the city name
 
                     cityName = CapitalizeText(cityName);
 
-                    currentWeatherCast.CityName = cityName;
+                    currentWeatherDTO.CityName = cityName;
 
-                    return currentWeatherCast;
+                    return currentWeatherDTO;
                 }
             }
 

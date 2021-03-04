@@ -1,25 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using WeatherApp.BLL.HelperClasses;
 using WeatherApp.BLL.Interfaces;
+using WeatherApp.BLL.Models;
 using WeatherApp.Models;
+using WeatherApp.Web.ViewModels;
 
 namespace WeatherApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly IWeatherService _weatherService;
         private readonly IConfiguration _config;
-        public HomeController(ILogger<HomeController> logger, IWeatherService weatherService, IConfiguration config)
+        private readonly IMapper _mapper;
+        public HomeController(ILogger<HomeController> logger, IWeatherService weatherService, IConfiguration config, IMapper mapper)
         {
-            _logger = logger;
             _weatherService = weatherService;
             _config = config;
+            _mapper = mapper;
         }
 
         public IActionResult Index()
@@ -32,7 +34,7 @@ namespace WeatherApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                object weatherInfoRoot;
+                object weatherInfoDTO;
                 var apiKey = _config.GetValue<string>("AccuweatherAPIKey");
 
                 if (cityName != null)
@@ -40,11 +42,11 @@ namespace WeatherApp.Controllers
                     if (cityName.Contains(","))
                     {
                         var split = cityName.Split(",");
-                        weatherInfoRoot = await _weatherService.GetCurrentWeather(split[0], apiKey);
+                        weatherInfoDTO = await _weatherService.GetCurrentWeather(split[0], apiKey);
                     }
                     else
                     {
-                        weatherInfoRoot = await _weatherService.GetCurrentWeather(cityName, apiKey);
+                        weatherInfoDTO = await _weatherService.GetCurrentWeather(cityName, apiKey);
                     }
                 }
                 else
@@ -54,16 +56,16 @@ namespace WeatherApp.Controllers
                     return RedirectToAction("CurrentWeather", "Home");
                 }
 
-                if (weatherInfoRoot.GetType() == typeof(string))
+                if (weatherInfoDTO.GetType() == typeof(string))
                 {
-                    TempData["Weather_Info"] = weatherInfoRoot.ToString();
+                    TempData["Weather_Info"] = weatherInfoDTO.ToString();
                     TempData.Keep("Weather_Info");
                     return RedirectToAction("CurrentWeather", "Home");
                 }
                 else
                 {
 
-                    TempData["Weather_Info"] = JsonConvert.SerializeObject(weatherInfoRoot);
+                    TempData["Weather_Info"] = JsonConvert.SerializeObject(weatherInfoDTO);
 
                     TempData.Keep("Weather_Info");
                     return RedirectToAction("CurrentWeather", "Home");
@@ -93,9 +95,11 @@ namespace WeatherApp.Controllers
             }
             else
             {
-                WeatherInfoRoot weatherInfoRoot = JsonConvert.DeserializeObject<WeatherInfoRoot>(storedResults);
-                ViewData["IsWeatherInfoNull"] = weatherInfoRoot == null ? "true" : "false";
-                return View(weatherInfoRoot);
+                WeatherInfoDTO weatherInfoDTO = JsonConvert.DeserializeObject<WeatherInfoDTO>(storedResults);
+
+                var currentWeatherViewModel = _mapper.Map<CurrentWeatherViewModel>(weatherInfoDTO);
+                ViewData["IsWeatherInfoNull"] = weatherInfoDTO == null ? "true" : "false";
+                return View(currentWeatherViewModel);
             }
         }
 

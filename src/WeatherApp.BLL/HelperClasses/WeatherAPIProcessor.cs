@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
+using WeatherApp.BLL.Models;
 
 namespace WeatherApp.BLL.HelperClasses
 { //Todo: Json parser from API instead of automapper

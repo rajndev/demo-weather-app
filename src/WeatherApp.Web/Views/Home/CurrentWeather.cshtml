@@ -1,4 +1,4 @@
-﻿@model WeatherInfoRoot
+﻿@model CurrentWeatherViewModel
 
 @{
     ViewData["Title"] = "CurrentWeather";
@@ -27,7 +27,7 @@ else
         <div class="card mx-auto shadow-sm" style="width: 25rem; border: 1px solid lightgray;">
 
             <div class="card-img">
-                @if (Model.isDayTime)
+                @if (Model.IsDayTime)
                 {
                     <img class="card-img-top" src="~/images/day.jpg" alt="Card image cap">
                 }
@@ -35,7 +35,7 @@ else
                 {
                     <img class="card-img-top" src="~/images/night.jpg" alt="Card image cap">
                 }
-                <div class="card-img-bottom-right"><span style="font-family: Calibri;font-weight: bold; font-size: 33px;"><span style="font-family: Calibri;font-weight: bold; font-size: 40px;">@Model.CityName<br /></span>@Model.CurrentDate</span></div>
+                <div class="card-img-bottom-right"><span style="font-family: Calibri;font-weight: bold; font-size: 33px;"><span style="font-family: Calibri;font-weight: bold; font-size: 40px;">@Model.CityName<br /></span>@Model.CityDate</span></div>
             </div>
 
             <div class="card-body">
@@ -44,14 +44,14 @@ else
                     <br />
 
                     <span style="font-family: Calibri; font-size: 30px; ">
-                        @Model.Weather[0].Description
+                        @Model.WeatherCondition
                     </span>
 
                     <br />
 
-                    <img src="http://openweathermap.org/img/wn/@{@Model.Weather[0].Icon}@@2x.png" alt="" /><br />
+                    <img src="http://openweathermap.org/img/wn/@{@Model.Icon}@@2x.png" alt="" /><br />
                     <span style="font-family: Calibri; font-size: 30px; ">
-                        @Model.Main.Temp °F
+                        @Model.Temperature °F
                     </span>
 
                     <br />

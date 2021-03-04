@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -5,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WeatherApp.BLL.Interfaces;
 using WeatherApp.BLL.Services;
+using WeatherApp.HelperClasses;
 
 namespace WeatherApp
 {
@@ -24,6 +26,8 @@ namespace WeatherApp
             services.AddControllersWithViews();
 
             services.AddTransient<IWeatherService, WeatherService>();
+
+            services.AddAutoMapper(c => c.AddProfile<AutoMappingProfile>(), typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
