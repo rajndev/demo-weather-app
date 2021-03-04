@@ -1,0 +1,7 @@
+﻿<form id="searchform" asp-action="weathersearch">
+    <div class="form-group">
+        <label asp-for="@Model.SearchTerm" class="control-label"></label>
+        
+    </div>
+    <input type="submit" value="Search" class="btn btn-primary" />
+</form>

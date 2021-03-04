@@ -1,0 +1,73 @@
+﻿@model WeatherInfoRoot
+
+@{
+    ViewData["Title"] = "CurrentWeather";
+}
+
+
+@if (ViewData["TextResponse"] != null && ViewData["TextResponse"].ToString() == "invalid city name")
+{
+    <div class="text-center" style="margin-top: 80px;">
+        <h1 class="display-4">Please enter a valid city name.</h1>
+        <img src="~/images/rain.gif" alt="Rain Storm" width="250" style="margin-top: 80px;" />
+    </div>
+}
+else if (ViewData["TextResponse"] != null && ViewData["TextResponse"].ToString() == "service unavailable")
+{
+    <div class="text-center" style="margin-top: 80px;">
+        <h1 class="display-4">The application has reached the maximum Accuweather API request limit. <br /><br />Please try again later.</h1>
+        <img src="~/images/rain.gif" alt="Rain Storm" width="250" style="margin-top: 80px;" />
+    </div>
+}
+else
+{
+    <div class="text-center" style="margin-top: 30px;">
+        <h1 style="font-family: Calibri; font-weight: bold;">Current Weather</h1>
+        <br />
+        <div class="card mx-auto shadow-sm" style="width: 25rem; border: 1px solid lightgray;">
+
+            <div class="card-img">
+                @if (Model.isDayTime)
+                {
+                    <img class="card-img-top" src="~/images/day.jpg" alt="Card image cap">
+                }
+                else
+                {
+                    <img class="card-img-top" src="~/images/night.jpg" alt="Card image cap">
+                }
+                <div class="card-img-bottom-right"><span style="font-family: Calibri;font-weight: bold; font-size: 33px;"><span style="font-family: Calibri;font-weight: bold; font-size: 40px;">@Model.CityName<br /></span>@Model.CurrentDate</span></div>
+            </div>
+
+            <div class="card-body">
+
+                <p class="card-text">
+                    <br />
+
+                    <span style="font-family: Calibri; font-size: 30px; ">
+                        @Model.Weather[0].Description
+                    </span>
+
+                    <br />
+
+                    <img src="http://openweathermap.org/img/wn/@{@Model.Weather[0].Icon}@@2x.png" alt="" /><br />
+                    <span style="font-family: Calibri; font-size: 30px; ">
+                        @Model.Main.Temp °F
+                    </span>
+
+                    <br />
+                    <br />
+
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+}
+
