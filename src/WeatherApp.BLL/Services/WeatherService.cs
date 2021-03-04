@@ -69,10 +69,6 @@ namespace WeatherApp.BLL.Services
 
         private Tuple<string, string, bool> GetDateTimeFromEpoch(long sunrise, long sunset, long currentTime, long timezone)
         {
-            //DateTime dtime = new DateTime(1970, 1, 1, 0, 0, 0);
-
-            //var dateTimeOffset = dtime.AddSeconds(currentTime + timezone);
-
             DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(currentTime + timezone);
 
             bool isDaytime = currentTime > sunrise && currentTime < sunset;
