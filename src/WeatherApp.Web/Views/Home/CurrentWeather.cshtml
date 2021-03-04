@@ -35,14 +35,16 @@ else
                 {
                     <img class="card-img-top" src="~/images/night.jpg" alt="Card image cap">
                 }
-                <div class="card-img-bottom-right"><span style="font-family: Calibri;font-weight: bold; font-size: 40px;">@Model.CityName</span></div>
+                <div class="card-img-bottom-right"><span style="font-family: Calibri;font-weight: bold; font-size: 40px;">@Model.CityName <br /><span style="font-size: 30px">@Model.CityDate</span></span></div>
             </div>
 
             <div class="card-body">
 
                 <p class="card-text">
+                    @*<span style="background-color: #8dbad6; border-radius: 20px; padding: 4px 9px; color: white; font-size: 15px;float: right; font-weight: bold;">@Model.CityTime</span>*@
+                    <span style="font-weight: bold;float: right;">@Model.CityTime</span>
                     <br />
-
+                    <br />
                     <span style="font-family: Calibri; font-size: 30px; ">
                         @Model.WeatherCondition
                     </span>

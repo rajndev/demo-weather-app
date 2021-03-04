@@ -36,7 +36,11 @@ namespace WeatherApp.BLL.Services
 
                     var currentWeatherDTO = _mapper.Map<WeatherInfoDTO>(currentWeatherCast);
 
-                    var currentDateTime = GetDateTimeFromEpoch(currentWeatherCast.Sys.Sunrise, currentWeatherCast.Sys.Sunset, currentWeatherCast.Dt);
+                    var currentDateTime = GetDateTimeFromEpoch(
+                        currentWeatherCast.Sys.Sunrise,
+                        currentWeatherCast.Sys.Sunset,
+                        currentWeatherCast.Dt,
+                        currentWeatherCast.Timezone);
 
                     currentWeatherDTO.CityDate = currentDateTime.Item1;
                     currentWeatherDTO.CityTime = currentDateTime.Item2;
@@ -63,16 +67,18 @@ namespace WeatherApp.BLL.Services
             return cityName;
         }
 
-        private Tuple<string, string, bool> GetDateTimeFromEpoch(int sunrise, int sunset, int currentTime)
+        private Tuple<string, string, bool> GetDateTimeFromEpoch(long sunrise, long sunset, long currentTime, long timezone)
         {
-            DateTime dtime = new DateTime(1970, 1, 1, 0, 0, 0);
+            //DateTime dtime = new DateTime(1970, 1, 1, 0, 0, 0);
 
-            var dtimeCurrent = dtime.AddSeconds(currentTime);
+            //var dateTimeOffset = dtime.AddSeconds(currentTime + timezone);
+
+            DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(currentTime + timezone);
 
             bool isDaytime = currentTime > sunrise && currentTime < sunset;
 
-            var humanReadabledate = dtimeCurrent.ToString("D");
-            var HumanReadabletime = dtimeCurrent.ToString("t");
+            var humanReadabledate = dateTimeOffset.DateTime.ToString("D");
+            var HumanReadabletime = dateTimeOffset.DateTime.ToString("t");
 
             return Tuple.Create(humanReadabledate, HumanReadabletime, isDaytime);
         }
