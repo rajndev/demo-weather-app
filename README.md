@@ -2,11 +2,7 @@
 
 This is an ASP.NET Core MVC demo weather application using the C# language. It displays the current weather infomation for the searched city including the current date and time at the respective city, sky conditions with an associated icon, and the current temperature. The weather data is obtained by using a HttpClient object and calling the OpenWeatherMap API.
 
-
-
-<p align="center">
-  <img src="src/Screenshots/weatherss.png">
-</p>
+<img align="right" src="src/Screenshots/weatherss.png">
 
 ## Usage
 
