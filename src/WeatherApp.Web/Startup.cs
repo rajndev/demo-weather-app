@@ -1,11 +1,14 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WeatherApp.BLL.Interfaces;
 using WeatherApp.BLL.Services;
+using WeatherApp.DAL.Data;
+using WeatherApp.DAL.Interfaces;
 using WeatherApp.HelperClasses;
 
 namespace WeatherApp
@@ -22,11 +25,16 @@ namespace WeatherApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")),
+                    ServiceLifetime.Scoped
+                    );
 
             services.AddControllersWithViews();
 
             services.AddTransient<IWeatherService, WeatherService>();
-
+            services.AddTransient<IDbInitializer, DbInitializer>();
             services.AddAutoMapper(c => c.AddProfile<AutoMappingProfile>(), typeof(Startup));
         }
 

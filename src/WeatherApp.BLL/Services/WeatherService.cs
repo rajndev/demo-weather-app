@@ -11,17 +11,18 @@ namespace WeatherApp.BLL.Services
     public class WeatherService : IWeatherService
     {
         private readonly IMapper _mapper;
-        private WeatherAPIProcessor APIProcessorSingleton = WeatherAPIProcessor.GetInstance();
+        private WeatherAPIProcessor _apiProcessorSingleton;
         public WeatherService(IMapper mapper)
         {
             _mapper = mapper;
+            _apiProcessorSingleton = WeatherAPIProcessor.GetInstance();
         }
 
         public async Task<object> GetCurrentWeather(string cityName, string apiKey)
         {
-            APIProcessorSingleton.BaseAPIUrl = BaseAPIUrls.GET_CURRENT_WEATHER;
+            _apiProcessorSingleton.BaseAPIUrl = BaseAPIUrls.GET_CURRENT_WEATHER;
             var query = $"q={cityName}&appid={apiKey}&units=imperial";
-            var currentWeather = await APIProcessorSingleton.GetCurrentWeather(query);
+            var currentWeather = await _apiProcessorSingleton.GetCurrentWeather(query);
 
             if (currentWeather != null)
             {

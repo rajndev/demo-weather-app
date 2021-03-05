@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherApp.Web", "src\Weath
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherApp.BLL", "src\WeatherApp.BLL\WeatherApp.BLL.csproj", "{D32F16D6-3ED6-4ADF-828F-2CE7D9E53284}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherApp.DAL", "src\WeatherApp.DAL\WeatherApp.DAL.csproj", "{9F09FB8E-FB8C-4092-8C04-0E608DB88AF1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D32F16D6-3ED6-4ADF-828F-2CE7D9E53284}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D32F16D6-3ED6-4ADF-828F-2CE7D9E53284}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D32F16D6-3ED6-4ADF-828F-2CE7D9E53284}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F09FB8E-FB8C-4092-8C04-0E608DB88AF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F09FB8E-FB8C-4092-8C04-0E608DB88AF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F09FB8E-FB8C-4092-8C04-0E608DB88AF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F09FB8E-FB8C-4092-8C04-0E608DB88AF1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
