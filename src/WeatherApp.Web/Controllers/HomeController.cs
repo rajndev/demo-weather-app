@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -17,7 +16,7 @@ namespace WeatherApp.Controllers
         private readonly IWeatherService _weatherService;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
-        public HomeController(ILogger<HomeController> logger, IWeatherService weatherService, IConfiguration config, IMapper mapper)
+        public HomeController(IWeatherService weatherService, IConfiguration config, IMapper mapper)
         {
             _weatherService = weatherService;
             _config = config;
@@ -35,7 +34,7 @@ namespace WeatherApp.Controllers
             if (ModelState.IsValid)
             {
                 object weatherInfoDTO;
-                var apiKey = _config.GetValue<string>("AccuweatherAPIKey");
+                var apiKey = _config.GetValue<string>("OpenWeatherMapAPIKey");
 
                 if (cityName != null)
                 {
@@ -64,9 +63,7 @@ namespace WeatherApp.Controllers
                 }
                 else
                 {
-
                     TempData["Weather_Info"] = JsonConvert.SerializeObject(weatherInfoDTO);
-
                     TempData.Keep("Weather_Info");
                     return RedirectToAction("CurrentWeather", "Home");
                 }
@@ -88,15 +85,14 @@ namespace WeatherApp.Controllers
                 ViewData["TextResponse"] = "invalid city name";
                 return View();
             }
-            else if (storedResults == "service unavailable")
+            else if (storedResults == "api service unavailable")
             {
-                ViewData["TextResponse"] = "service unavailable";
+                ViewData["TextResponse"] = "api service unavailable";
                 return View();
             }
             else
             {
                 WeatherInfoDTO weatherInfoDTO = JsonConvert.DeserializeObject<WeatherInfoDTO>(storedResults);
-
                 var currentWeatherViewModel = _mapper.Map<CurrentWeatherViewModel>(weatherInfoDTO);
                 ViewData["IsWeatherInfoNull"] = weatherInfoDTO == null ? "true" : "false";
                 return View(currentWeatherViewModel);

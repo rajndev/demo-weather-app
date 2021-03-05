@@ -10,7 +10,6 @@ namespace WeatherApp.BLL.Services
 {
     public class WeatherService : IWeatherService
     {
-
         private readonly IMapper _mapper;
         private WeatherAPIProcessor APIProcessorSingleton = WeatherAPIProcessor.GetInstance();
         public WeatherService(IMapper mapper)
@@ -33,7 +32,6 @@ namespace WeatherApp.BLL.Services
                 else
                 {
                     var currentWeatherCast = (WeatherInfoRoot)currentWeather;
-
                     var currentWeatherDTO = _mapper.Map<WeatherInfoDTO>(currentWeatherCast);
 
                     var currentDateTime = GetDateTimeFromEpoch(
@@ -49,20 +47,18 @@ namespace WeatherApp.BLL.Services
                     //capitalize each word in the city name
 
                     cityName = CapitalizeText(cityName);
-
                     currentWeatherDTO.CityName = cityName;
 
                     return currentWeatherDTO;
                 }
             }
 
-            return "service unavailable";
+            return "api service unavailable";
         }
 
         private string CapitalizeText(string cityName)
         {
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-
             cityName = textInfo.ToTitleCase(cityName);
             return cityName;
         }
@@ -73,10 +69,10 @@ namespace WeatherApp.BLL.Services
 
             bool isDaytime = currentTime > sunrise && currentTime < sunset;
 
-            var humanReadabledate = dateTimeOffset.DateTime.ToString("D");
-            var HumanReadabletime = dateTimeOffset.DateTime.ToString("t");
+            var humanReadableDate = dateTimeOffset.DateTime.ToString("D");
+            var humanReadableTime = dateTimeOffset.DateTime.ToString("t");
 
-            return Tuple.Create(humanReadabledate, HumanReadabletime, isDaytime);
+            return Tuple.Create(humanReadableDate, humanReadableTime, isDaytime);
         }
     }
 }
