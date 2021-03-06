@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using WeatherApp.BLL.Interfaces;
 using WeatherApp.BLL.Models;
+using WeatherApp.DAL.Data;
 using WeatherApp.Models;
 using WeatherApp.Web.ViewModels;
 
@@ -16,11 +18,14 @@ namespace WeatherApp.Controllers
         private readonly IWeatherService _weatherService;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
-        public HomeController(IWeatherService weatherService, IConfiguration config, IMapper mapper)
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(IWeatherService weatherService, IConfiguration config, IMapper mapper, ApplicationDbContext context)
         {
             _weatherService = weatherService;
             _config = config;
             _mapper = mapper;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -97,6 +102,15 @@ namespace WeatherApp.Controllers
                 ViewData["IsWeatherInfoNull"] = weatherInfoDTO == null ? "true" : "false";
                 return View(currentWeatherViewModel);
             }
+        }
+
+        [HttpPost]
+        public JsonResult GetAutocompleteList(string cityName)
+        {
+            var cityNameList = _context.Cities.Where(s => s.Name.Contains(cityName)).Take(8).Select(p => new { p.Name, p.Id }).ToList();
+
+            //string[] cityNameList = { "homer", "bart", "lisa" };
+            return Json(cityNameList);
         }
 
         public IActionResult Privacy()
