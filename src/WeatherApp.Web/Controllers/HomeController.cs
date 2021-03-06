@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,30 +35,39 @@ namespace WeatherApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> WeatherSearch(string cityName)
+        public async Task<IActionResult> WeatherSearch(
+            string cityName,
+            string cityIdHidden,
+            string cityNameHidden,
+            string stateHidden,
+            string countryHidden)
         {
             if (ModelState.IsValid)
             {
-                object weatherInfoDTO;
                 var apiKey = _config.GetValue<string>("OpenWeatherMapAPIKey");
+                object weatherInfoDTO = null;
 
-                if (cityName != null)
-                {
-                    if (cityName.Contains(","))
-                    {
-                        var split = cityName.Split(",");
-                        weatherInfoDTO = await _weatherService.GetCurrentWeather(split[0], apiKey);
-                    }
-                    else
-                    {
-                        weatherInfoDTO = await _weatherService.GetCurrentWeather(cityName, apiKey);
-                    }
-                }
-                else
+                var hiddenSearchTerm = stateHidden == null ? cityNameHidden + ", " + countryHidden : cityNameHidden + ", " + stateHidden + ", " + countryHidden;
+
+                if (cityName == null)
                 {
                     TempData["Weather_Info"] = "invalid city name";
                     TempData.Keep("Weather_Info");
                     return RedirectToAction("CurrentWeather", "Home");
+                }
+                else if (hiddenSearchTerm == cityName)
+                {
+                    int id;
+                    Int32.TryParse(cityIdHidden, out id);
+
+                    weatherInfoDTO = await _weatherService.GetCurrentWeather(
+                        apiKey: apiKey,
+                        cityId: id,
+                        cityName: cityName);
+                }
+                else if (hiddenSearchTerm != cityName)
+                {
+                    weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityName: cityName);
                 }
 
                 if (weatherInfoDTO.GetType() == typeof(string))
@@ -73,10 +83,8 @@ namespace WeatherApp.Controllers
                     return RedirectToAction("CurrentWeather", "Home");
                 }
             }
-            else
-            {
-                return RedirectToAction("Index");
-            }
+
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -107,9 +115,8 @@ namespace WeatherApp.Controllers
         [HttpPost]
         public JsonResult GetAutocompleteList(string cityName)
         {
-            var cityNameList = _context.Cities.Where(s => s.Name.Contains(cityName)).Take(8).Select(p => new { p.Name, p.Id }).ToList();
+            var cityNameList = _context.Cities.Where(s => s.Name.Contains(cityName)).Take(8).Select(p => new { p.Name, p.State, p.Country, p.Id }).ToList();
 
-            //string[] cityNameList = { "homer", "bart", "lisa" };
             return Json(cityNameList);
         }
 

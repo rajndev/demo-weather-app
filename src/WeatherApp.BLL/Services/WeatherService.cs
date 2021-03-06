@@ -18,11 +18,21 @@ namespace WeatherApp.BLL.Services
             _apiProcessorSingleton = WeatherAPIProcessor.GetInstance();
         }
 
-        public async Task<object> GetCurrentWeather(string cityName, string apiKey)
+        public async Task<object> GetCurrentWeather(string apiKey, string cityName = null, int cityId = 0)
         {
             _apiProcessorSingleton.BaseAPIUrl = BaseAPIUrls.GET_CURRENT_WEATHER;
-            var query = $"q={cityName}&appid={apiKey}&units=imperial";
-            var currentWeather = await _apiProcessorSingleton.GetCurrentWeather(query);
+            object currentWeather = null;
+
+            if (cityId > 0)
+            {
+                var query = $"q={cityId}&appid={apiKey}&units=imperial";
+                currentWeather = await _apiProcessorSingleton.GetCurrentWeather(query);
+            }
+            else
+            {
+                var query = $"q={cityName}&appid={apiKey}&units=imperial";
+                currentWeather = await _apiProcessorSingleton.GetCurrentWeather(query);
+            }
 
             if (currentWeather != null)
             {

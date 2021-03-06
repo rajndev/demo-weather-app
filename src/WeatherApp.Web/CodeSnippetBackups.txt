@@ -5,3 +5,82 @@
     </div>
     <input type="submit" value="Search" class="btn btn-primary" />
 </form>
+
+ [HttpPost]
+        public async Task<IActionResult> WeatherSearch(
+            string cityName,
+            string cityIdHidden,
+            string cityNameHidden,
+            string stateHidden,
+            string countryHidden)
+        {
+            if (ModelState.IsValid)
+            {
+                var apiKey = _config.GetValue<string>("OpenWeatherMapAPIKey");
+                object weatherInfoDTO = null;
+
+                var hiddenSearchTerm = stateHidden == null ? cityNameHidden + ", " + countryHidden : cityNameHidden + ", " + stateHidden + ", " + countryHidden;
+
+                if (cityName == null)
+                {
+                    TempData["Weather_Info"] = "invalid city name";
+                    TempData.Keep("Weather_Info");
+                    return RedirectToAction("CurrentWeather", "Home");
+                }
+                else if (hiddenSearchTerm == cityName)
+                {
+                    int id;
+                    Int32.TryParse(cityIdHidden, out id);
+
+                    weatherInfoDTO = await _weatherService.GetCurrentWeather(
+                        apiKey: apiKey,
+                        cityId: id,
+                        cityName: cityName);
+                }
+                else if (hiddenSearchTerm != cityName)
+                {
+                    var splitDirectCityName = cityName.Split(",");
+
+                    if (splitDirectCityName.Length == 3)
+                    {
+                        var cityRecord = _context.Cities.Where(n => n.Name == splitDirectCityName[0] && n.State == splitDirectCityName[1] && n.Country == splitDirectCityName[2]).FirstOrDefault();
+
+                        if (cityRecord == null)
+                        {
+                            TempData["Weather_Info"] = "invalid city name";
+                            TempData.Keep("Weather_Info");
+                            return RedirectToAction("CurrentWeather", "Home");
+                        }
+                        else
+                        {
+                            weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityId: cityRecord.Id, cityName: cityName);
+                        }
+                    }
+                    else if (splitDirectCityName.Length == 2)
+                    {
+                        var cityRecord = _context.Cities.Where(n => n.Name == splitDirectCityName[0] && (n.State == splitDirectCityName[1] || n.Country == splitDirectCityName[1])).FirstOrDefault();
+
+                        weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityId: cityRecord.Id, cityName: cityName);
+                    }
+                    else
+                    {
+                        weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityName: cityName);
+                    }
+                }
+
+                if (weatherInfoDTO.GetType() == typeof(string))
+                {
+                    TempData["Weather_Info"] = weatherInfoDTO.ToString();
+                    TempData.Keep("Weather_Info");
+                    return RedirectToAction("CurrentWeather", "Home");
+                }
+                else
+                {
+                    TempData["Weather_Info"] = JsonConvert.SerializeObject(weatherInfoDTO);
+                    TempData.Keep("Weather_Info");
+                    return RedirectToAction("CurrentWeather", "Home");
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
