@@ -115,7 +115,7 @@ namespace WeatherApp.Controllers
         [HttpPost]
         public JsonResult GetAutocompleteList(string cityName)
         {
-            var cityNameList = _context.Cities.Where(s => s.Name.Contains(cityName)).Take(8).Select(p => new { p.Name, p.State, p.Country, p.Id }).ToList();
+            var cityNameList = _context.Cities.Where(s => s.Name.Contains(cityName)).Take(8).Select(p => new { p.Name, p.State, p.Country, p.CityCode }).ToList();
 
             return Json(cityNameList);
         }
