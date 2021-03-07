@@ -70,7 +70,7 @@ namespace WeatherApp.Controllers
                     weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityName: cityName);
                 }
 
-                if (weatherInfoDTO.GetType() == typeof(string))
+                if (weatherInfoDTO is string)
                 {
                     TempData["Weather_Info"] = weatherInfoDTO.ToString();
                     TempData.Keep("Weather_Info");
@@ -117,7 +117,7 @@ namespace WeatherApp.Controllers
         {
             var cityNameList = _context.Cities.Where(s => s.Name.Contains(cityName)).Take(8).Select(p => new { p.Name, p.State, p.Country, p.CityCode }).ToList();
 
-            return Json(cityNameList);
+          return Json(cityNameList);
         }
 
         public IActionResult Privacy()

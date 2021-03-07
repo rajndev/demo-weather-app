@@ -8,7 +8,7 @@
                 success: function (data) {
                     response($.map(data, function (item) {
                         return {
-                            citycode: item.citycode,
+                            cityCode: item.cityCode,
                             name: item.name,
                             state: item.state,
                             country: item.country
@@ -25,7 +25,7 @@
         },
         select: function (event, ui) {
 
-            $('#CityIdHidden').val(ui.item.citycode);
+            $('#CityIdHidden').val(ui.item.cityCode);
             $('#CityNameHidden').val(ui.item.name);
             $('#StateHidden').val(ui.item.state);
             $('#CountryHidden').val(ui.item.country);

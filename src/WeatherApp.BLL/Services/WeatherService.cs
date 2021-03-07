@@ -21,11 +21,11 @@ namespace WeatherApp.BLL.Services
         public async Task<object> GetCurrentWeather(string apiKey, string cityName = null, int cityId = 0)
         {
             _apiProcessorSingleton.BaseAPIUrl = BaseAPIUrls.GET_CURRENT_WEATHER;
-            object currentWeather = null;
+            object currentWeather;
 
             if (cityId > 0)
             {
-                var query = $"q={cityId}&appid={apiKey}&units=imperial";
+                var query = $"id={cityId}&appid={apiKey}&units=imperial";
                 currentWeather = await _apiProcessorSingleton.GetCurrentWeather(query);
             }
             else
@@ -36,7 +36,7 @@ namespace WeatherApp.BLL.Services
 
             if (currentWeather != null)
             {
-                if (currentWeather.GetType() == typeof(string))
+                if (currentWeather is string)
                 {
                     return "invalid city name";
                 }
