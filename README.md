@@ -4,7 +4,9 @@ This is an ASP.NET Core MVC demo weather application using the C# language. It d
 
 [Click here](https://weatherapp.rajnarayanan.com) for a live demo.
 
-<img align="right" src="src/Screenshots/weatherss.png">
+<p align="center">
+  <img src="src/Screenshots/weatherss.png">
+</p>
 
 ## Usage
 
