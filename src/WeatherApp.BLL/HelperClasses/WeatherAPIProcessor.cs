@@ -30,9 +30,7 @@ namespace WeatherApp.BLL.HelperClasses
 
             if (response.IsSuccessStatusCode)
             {
-
                 WeatherInfoRoot myDeserializedClass = JsonConvert.DeserializeObject<WeatherInfoRoot>(await response.Content.ReadAsStringAsync());
-
                 return myDeserializedClass;
             }
             else if (response.StatusCode.ToString() == "NotFound")

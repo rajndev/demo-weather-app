@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
@@ -67,7 +68,30 @@ namespace WeatherApp.Controllers
                 }
                 else if (hiddenSearchTerm != cityName)
                 {
-                    weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityName: cityName);
+                    var split = cityName.Split(",");
+
+                    if (split.Length == 3)
+                    {
+                        var cityRecord = await _context.Cities.Where(p => p.Name == split[0].Trim() && p.State == split[1].Trim() && p.Country == split[2].Trim()).FirstOrDefaultAsync();
+
+                        if (cityRecord == null)
+                        {
+                            weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityName: cityName);
+                        }
+                        else
+                        {
+                            weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityId: cityRecord.CityCode, cityName: cityName);
+                        }
+                    }
+                    else if (split.Length == 2)
+                    {
+                        int cityId = FindCityNameIdFromDb(cityName);
+                        weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityId: cityId, cityName: cityName);
+                    }
+                    else
+                    {
+                        weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityName: cityName);
+                    }
                 }
 
                 if (weatherInfoDTO is string)
@@ -86,6 +110,8 @@ namespace WeatherApp.Controllers
 
             return RedirectToAction("Index");
         }
+
+
 
         [HttpGet]
         public IActionResult CurrentWeather()
@@ -107,7 +133,6 @@ namespace WeatherApp.Controllers
             {
                 WeatherInfoDTO weatherInfoDTO = JsonConvert.DeserializeObject<WeatherInfoDTO>(storedResults);
                 var currentWeatherViewModel = _mapper.Map<CurrentWeatherViewModel>(weatherInfoDTO);
-                ViewData["IsWeatherInfoNull"] = weatherInfoDTO == null ? "true" : "false";
                 return View(currentWeatherViewModel);
             }
         }
@@ -117,7 +142,23 @@ namespace WeatherApp.Controllers
         {
             var cityNameList = _context.Cities.Where(s => s.Name.Contains(cityName)).Take(8).Select(p => new { p.Name, p.State, p.Country, p.CityCode }).ToList();
 
-          return Json(cityNameList);
+            return Json(cityNameList);
+        }
+
+        private int FindCityNameIdFromDb(string cityName)
+        {
+            var split = cityName.Split(",");
+            var caps = split[1].ToLower().Trim();
+
+            var cityRecords = _context.Cities.Where(p => p.Name == split[0]).ToList();
+
+            foreach (var city in cityRecords)
+            {
+                if (city.State.ToLower() == caps)
+                    return city.CityCode;
+            }
+
+            return 0;
         }
 
         public IActionResult Privacy()
