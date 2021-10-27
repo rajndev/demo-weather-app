@@ -12,59 +12,62 @@ namespace WeatherApp.BLL.Services
     {
         private readonly IMapper _mapper;
         private WeatherAPIProcessor _apiProcessorSingleton;
+        private WeatherInfoRoot _apiResponse;
         public WeatherService(IMapper mapper)
         {
             _mapper = mapper;
             _apiProcessorSingleton = WeatherAPIProcessor.GetInstance();
+            _apiProcessorSingleton.BaseAPIUrl = BaseAPIUrls.GET_CURRENT_WEATHER;
         }
 
-        public async Task<object> GetCurrentWeather(string apiKey, string cityName = null, int cityId = 0)
+        public async Task<WeatherInfoDTO> GetCurrentWeather(string apiKey, string cityName = null, int? cityId = null)
         {
-            _apiProcessorSingleton.BaseAPIUrl = BaseAPIUrls.GET_CURRENT_WEATHER;
-            object currentWeather;
+            int httpResponse;
+            WeatherInfoDTO weatherInfoDTO = new WeatherInfoDTO();
 
-            if (cityId > 0)
+            if (cityId != null)
             {
                 var query = $"id={cityId}&appid={apiKey}&units=imperial";
-                currentWeather = await _apiProcessorSingleton.GetCurrentWeather(query);
+                httpResponse = await _apiProcessorSingleton.CallWeatherApi(query);
             }
             else
             {
                 var query = $"q={cityName}&appid={apiKey}&units=imperial";
-                currentWeather = await _apiProcessorSingleton.GetCurrentWeather(query);
+                httpResponse = await _apiProcessorSingleton.CallWeatherApi(query);
             }
 
-            if (currentWeather != null)
+            if(httpResponse == 200)
             {
-                if (currentWeather is string)
-                {
-                    return "invalid city name";
-                }
-                else
-                {
-                    var currentWeatherCast = (WeatherInfoRoot)currentWeather;
-                    var currentWeatherDTO = _mapper.Map<WeatherInfoDTO>(currentWeatherCast);
+                _apiResponse = _apiProcessorSingleton.GetApiResponseData();
 
-                    var currentDateTime = GetDateTimeFromEpoch(
-                        currentWeatherCast.Sys.Sunrise,
-                        currentWeatherCast.Sys.Sunset,
-                        currentWeatherCast.Dt,
-                        currentWeatherCast.Timezone);
+                weatherInfoDTO = _mapper.Map<WeatherInfoDTO>(_apiResponse);
 
-                    currentWeatherDTO.CityDate = currentDateTime.Item1;
-                    currentWeatherDTO.CityTime = currentDateTime.Item2;
-                    currentWeatherDTO.IsDayTime = currentDateTime.Item3;
+                var currentDateTime = GetDateTimeFromEpoch(
+                    _apiResponse.Sys.Sunrise,
+                     _apiResponse.Sys.Sunset,
+                     _apiResponse.Dt,
+                     _apiResponse.Timezone);
 
-                    //capitalize each word in the city name
+                weatherInfoDTO.CityDate = currentDateTime.Item1;
+                weatherInfoDTO.CityTime = currentDateTime.Item2;
+                weatherInfoDTO.IsDayTime = currentDateTime.Item3;
+                weatherInfoDTO.isStatusOK = true;
 
-                    cityName = CapitalizeText(cityName);
-                    currentWeatherDTO.CityName = cityName;
+                //capitalize each word in the city name
 
-                    return currentWeatherDTO;
-                }
+                cityName = CapitalizeText(cityName);
+                weatherInfoDTO.CityName = cityName;
+            }
+            else if(httpResponse == 404)
+            {
+                weatherInfoDTO.isStatusNotFound = true;
+            }
+            else
+            {
+                weatherInfoDTO.isStatusOther = true;
             }
 
-            return "api service unavailable";
+            return weatherInfoDTO;
         }
 
         private string CapitalizeText(string cityName)

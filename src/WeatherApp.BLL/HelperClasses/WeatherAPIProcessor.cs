@@ -10,7 +10,8 @@ namespace WeatherApp.BLL.HelperClasses
         private WeatherAPIProcessor() { }
 
         private static WeatherAPIProcessor _instance;
-        public static HttpClient ApiClient;
+        private static HttpClient _apiClient = new HttpClient();
+        private WeatherInfoRoot _apiResponseData;
         public string BaseAPIUrl { get; set; }
 
         public static WeatherAPIProcessor GetInstance()
@@ -22,23 +23,24 @@ namespace WeatherApp.BLL.HelperClasses
             return _instance;
         }
 
-        public async Task<object> GetCurrentWeather(string query)
+        public async Task<int> CallWeatherApi(string query)
         {
-            ApiClient = new HttpClient();
-
-            var response = await ApiClient.GetAsync($"{BaseAPIUrl}{query}");
+            var response = await _apiClient.GetAsync($"{BaseAPIUrl}{query}");
 
             if (response.IsSuccessStatusCode)
             {
-                WeatherInfoRoot myDeserializedClass = JsonConvert.DeserializeObject<WeatherInfoRoot>(await response.Content.ReadAsStringAsync());
-                return myDeserializedClass;
+                _apiResponseData = JsonConvert.DeserializeObject<WeatherInfoRoot>(await response.Content.ReadAsStringAsync());
             }
-            else if (response.StatusCode.ToString() == "NotFound")
-            {
-                return "invalid city name";
-            }
-            return null;
 
+            var statusCode = (int)response.StatusCode;
+
+            return statusCode;
+
+        }
+
+        public WeatherInfoRoot GetApiResponseData()
+        {
+            return _apiResponseData;
         }
     }
 }

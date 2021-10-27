@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using WeatherApp.BLL.Interfaces;
 using WeatherApp.BLL.Models;
 using WeatherApp.DAL.Data;
+using WeatherApp.DAL.Entities;
 using WeatherApp.Models;
 using WeatherApp.Web.ViewModels;
 
@@ -36,57 +37,37 @@ namespace WeatherApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> WeatherSearch(
-            string cityName,
-            string cityIdHidden,
-            string cityNameHidden,
-            string stateHidden,
-            string countryHidden)
+        public async Task<IActionResult> SearchWeather(
+            string cityName)
         {
             if (ModelState.IsValid)
             {
                 var apiKey = _config.GetValue<string>("OpenWeatherMapAPIKey");
-                object weatherInfoDTO = null;
+                WeatherInfoDTO weatherInfoDTO = null;
 
-                var hiddenSearchTerm = stateHidden == null ? cityNameHidden + ", " + countryHidden : cityNameHidden + ", " + stateHidden + ", " + countryHidden;
-
-                if (cityName == null)
+                if (String.IsNullOrWhiteSpace(cityName))
                 {
-                    TempData["Weather_Info"] = "invalid city name";
-                    TempData.Keep("Weather_Info");
-                    return RedirectToAction("CurrentWeather", "Home");
+                    TempData["Weather_Info"] = "";
+                    TempData.Keep("isCityNameEmpty");
+                    return RedirectToAction("ShowWeatherResponse", "Home");
                 }
-                else if (hiddenSearchTerm == cityName)
-                {
-                    int id;
-                    Int32.TryParse(cityIdHidden, out id);
-
-                    weatherInfoDTO = await _weatherService.GetCurrentWeather(
-                        apiKey: apiKey,
-                        cityId: id,
-                        cityName: cityName);
-                }
-                else if (hiddenSearchTerm != cityName)
+                else
                 {
                     var split = cityName.Split(",");
+                    int? cityCode = null;
 
                     if (split.Length == 3)
                     {
-                        var cityRecord = await _context.Cities.Where(p => p.Name == split[0].Trim() && p.State == split[1].Trim() && p.Country == split[2].Trim()).FirstOrDefaultAsync();
-
-                        if (cityRecord == null)
-                        {
-                            weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityName: cityName);
-                        }
-                        else
-                        {
-                            weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityId: cityRecord.CityCode, cityName: cityName);
-                        }
+                        cityCode = await GetCityCode(split, 3);
                     }
                     else if (split.Length == 2)
                     {
-                        int cityId = FindCityNameIdFromDb(cityName);
-                        weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityId: cityId, cityName: cityName);
+                        cityCode = await GetCityCode(split, 2);
+                    }
+
+                    if (cityCode != 0)
+                    {
+                        weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityName, cityId: cityCode);
                     }
                     else
                     {
@@ -94,18 +75,9 @@ namespace WeatherApp.Controllers
                     }
                 }
 
-                if (weatherInfoDTO is string)
-                {
-                    TempData["Weather_Info"] = weatherInfoDTO.ToString();
-                    TempData.Keep("Weather_Info");
-                    return RedirectToAction("CurrentWeather", "Home");
-                }
-                else
-                {
-                    TempData["Weather_Info"] = JsonConvert.SerializeObject(weatherInfoDTO);
-                    TempData.Keep("Weather_Info");
-                    return RedirectToAction("CurrentWeather", "Home");
-                }
+                TempData["Weather_Info"] = JsonConvert.SerializeObject(weatherInfoDTO);
+                TempData.Keep("Weather_Info");
+                return RedirectToAction("ShowWeatherResponse", "Home");
             }
 
             return RedirectToAction("Index");
@@ -114,26 +86,36 @@ namespace WeatherApp.Controllers
 
 
         [HttpGet]
-        public IActionResult CurrentWeather()
+        public IActionResult ShowWeatherResponse()
         {
-            TempData.Keep("Weather_Info");
-            string storedResults = TempData["Weather_Info"].ToString();
-
-            if (storedResults == "invalid city name")
+            if(TempData["isCityNameEmpty"] != null)
             {
+                TempData.Keep("isCityNameEmpty");
                 ViewData["TextResponse"] = "invalid city name";
-                return View();
-            }
-            else if (storedResults == "api service unavailable")
-            {
-                ViewData["TextResponse"] = "api service unavailable";
                 return View();
             }
             else
             {
+                TempData.Keep("Weather_Info");
+                var storedResults = TempData["Weather_Info"].ToString();
+
                 WeatherInfoDTO weatherInfoDTO = JsonConvert.DeserializeObject<WeatherInfoDTO>(storedResults);
-                var currentWeatherViewModel = _mapper.Map<CurrentWeatherViewModel>(weatherInfoDTO);
-                return View(currentWeatherViewModel);
+
+                if (weatherInfoDTO.isStatusNotFound)
+                {
+                    ViewData["TextResponse"] = "invalid city name";
+                    return View();
+                }
+                else if (weatherInfoDTO.isStatusOther)
+                {
+                    ViewData["TextResponse"] = "api service unavailable";
+                    return View();
+                }
+                else
+                {
+                    var currentWeatherViewModel = _mapper.Map<CurrentWeatherViewModel>(weatherInfoDTO);
+                    return View(currentWeatherViewModel);
+                }
             }
         }
 
@@ -145,22 +127,22 @@ namespace WeatherApp.Controllers
             return Json(cityNameList);
         }
 
-        private int FindCityNameIdFromDb(string cityName)
+        public async Task<int?> GetCityCode(string[] split, int length)
         {
-            var split = cityName.Split(",");
-            var caps = split[1].ToLower().Trim();
+            City cityRecord = null;
 
-            var cityRecords = _context.Cities.Where(p => p.Name == split[0]).ToList();
-
-            foreach (var city in cityRecords)
+            if(length == 3)
             {
-                if (city.State.ToLower() == caps)
-                    return city.CityCode;
+                cityRecord = await _context.Cities.Where(p => p.Name == split[0].Trim() && p.State == split[1].Trim() && p.Country == split[2].Trim()).FirstOrDefaultAsync();
+            }  
+            else if(length == 2)
+            {
+                cityRecord = await _context.Cities.Where(p => p.Name == split[0].Trim() && p.State == split[1].Trim()).FirstOrDefaultAsync();
             }
 
-            return 0;
+            return cityRecord?.CityCode;
         }
-
+        
         public IActionResult Privacy()
         {
             return View();
