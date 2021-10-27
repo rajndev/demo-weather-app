@@ -20,12 +20,12 @@ namespace WeatherApp.BLL.Services
             _apiProcessorSingleton.BaseAPIUrl = BaseAPIUrls.GET_CURRENT_WEATHER;
         }
 
-        public async Task<WeatherInfoDTO> GetCurrentWeather(string apiKey, string cityName = null, int? cityId = null)
+        public async Task<WeatherInfoDTO> GetCurrentWeather(string apiKey, string cityName = null, int? cityId = 0)
         {
             int httpResponse;
             WeatherInfoDTO weatherInfoDTO = new WeatherInfoDTO();
 
-            if (cityId != null)
+            if (cityId > 0)
             {
                 var query = $"id={cityId}&appid={apiKey}&units=imperial";
                 httpResponse = await _apiProcessorSingleton.CallWeatherApi(query);

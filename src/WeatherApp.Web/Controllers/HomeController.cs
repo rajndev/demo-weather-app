@@ -65,7 +65,7 @@ namespace WeatherApp.Controllers
                         cityCode = await GetCityCode(split, 2);
                     }
 
-                    if (cityCode != 0)
+                    if (cityCode != null)
                     {
                         weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityName, cityId: cityCode);
                     }
