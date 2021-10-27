@@ -47,7 +47,7 @@ namespace WeatherApp.Controllers
 
                 if (String.IsNullOrWhiteSpace(cityName))
                 {
-                    TempData["Weather_Info"] = "";
+                    TempData["isCityNameEmpty"] = "true";
                     TempData.Keep("isCityNameEmpty");
                     return RedirectToAction("ShowWeatherResponse", "Home");
                 }
