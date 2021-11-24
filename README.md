@@ -4,7 +4,7 @@
 
 # ASP.NET Core MVC Demo Weather App
 
-This is an ASP.NET Core MVC demo weather application using the C# language. It displays the current weather infomation for the searched city including the current date and time at the respective city, sky conditions with an associated icon, and the current temperature. The weather data is obtained by using a HttpClient object and calling the OpenWeatherMap API.
+This is a demo weather app built using C# and ASP.NET Core MVC. It displays the current weather for a city along with the local date and time. The weather data is obtained by using `HttpClient` and calling the `OpenWeatherMap` API.
 
 <p align="center"> 
   <img width=346 src="https://user-images.githubusercontent.com/19508650/136658509-467c48d9-7e15-4734-9fbe-b884d8cdecf6.jpg">
@@ -17,11 +17,11 @@ This is an ASP.NET Core MVC demo weather application using the C# language. It d
 
 ## Usage
 
-To search for the current weather conditions for a city of interest, enter the city name into the search box and click the "Get Weather" button.
+To search for the current weather conditions for a city of interest, enter the city name into the search box and click the `Get Weather` button.
 
-## Technology Stacks Used
+## Technology Stacks and Tools Used
 
-C#, ASP.NET Core MVC 3.1, HTML5, CSS, Bootstrap, Git for Version Control, Azure DevOps for project management, and Microsoft Teams for code reviews.
+C#, ASP.NET Core MVC 3.1, HTML5, CSS, Bootstrap, Git and GitHub for Version Control, Azure DevOps for project management, and Microsoft Teams for code reviews.
 
 Design and architectural patterns used: singleton pattern, MVC pattern, 3-layered architecture.
 
