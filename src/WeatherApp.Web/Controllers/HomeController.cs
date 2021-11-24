@@ -48,7 +48,6 @@ namespace WeatherApp.Controllers
                 if (String.IsNullOrWhiteSpace(cityName))
                 {
                     TempData["isCityNameEmpty"] = "true";
-                    TempData.Keep("isCityNameEmpty");
                     return RedirectToAction("ShowWeatherResponse", "Home");
                 }
                 else
@@ -88,9 +87,8 @@ namespace WeatherApp.Controllers
         [HttpGet]
         public IActionResult ShowWeatherResponse()
         {
-            if(TempData["isCityNameEmpty"] != null)
+            if((String)TempData["isCityNameEmpty"] == "true")
             {
-                TempData.Keep("isCityNameEmpty");
                 ViewData["TextResponse"] = "invalid city name";
                 return View();
             }
