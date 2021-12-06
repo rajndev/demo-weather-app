@@ -30,11 +30,13 @@
             $('#StateHidden').val(ui.item.state);
             $('#CountryHidden').val(ui.item.country);
 
-            if (ui.item.state != "") {
-                $(this).val(ui.item.name + ", " + ui.item.state + ", " + ui.item.country);
+            if (ui.item.state !== "") {
+                let message = `${ui.item.name}, ${ui.item.state}, ${ui.item.country}`;
+                $(this).val(message);
             }
             else {
-                $(this).val(ui.item.name +  ", " + ui.item.country);
+                let message = `${ui.item.name}, ${ui.item.country}`;
+                $(this).val(message);
             }
             return false;
         },
