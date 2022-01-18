@@ -21,9 +21,9 @@ To search for the current weather conditions for a city of interest, enter the c
 
 ## Technology Stacks and Tools Used
 
-C#, ASP.NET Core MVC 3.1, HTML5, CSS, Bootstrap, Git and GitHub for Version Control, Azure DevOps for project management, and Microsoft Teams for code reviews.
+**Frameworks, languages, and tools:** C#, ASP.NET Core MVC 3.1, HTML5, CSS, Bootstrap, Git and GitHub for Version Control, Azure DevOps for project management, and Microsoft Teams for code reviews.
 
-Design and architectural patterns used: singleton pattern, MVC pattern, 3-layered architecture.
+**Design and architectural patterns:** singleton pattern, unit of work pattern, generic repository pattern, MVC pattern, 3-layered architecture.
 
 For productivity purposes, the following Visual Studio extensions were used: Productivity Power Tools, CodeMaid, Github extension for Visual Studio 2019, Snippet Designer, and Web Essentials. 
 
