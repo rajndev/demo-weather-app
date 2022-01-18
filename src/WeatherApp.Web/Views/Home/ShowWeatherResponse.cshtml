@@ -5,14 +5,14 @@
 }
 
 
-@if (ViewData["TextResponse"] != null && ViewData["TextResponse"].ToString() == "invalid city name")
+@if (ViewData["TextResponse"] != null && ViewData["TextResponse"].ToString() == "Invalid city name")
 {
     <div class="text-center" style="margin-top: 80px;">
         <h1 class="display-4">Please enter a valid city name.</h1>
         <img src="~/images/rain.gif" alt="Rain Storm" width="250" style="margin-top: 80px;" />
     </div>
 }
-else if (ViewData["TextResponse"] != null && ViewData["TextResponse"].ToString() == "service unavailable")
+else if (ViewData["TextResponse"] != null && ViewData["TextResponse"].ToString() == "API service unavailable")
 {
     <div class="text-center" style="margin-top: 80px;">
         <h1 class="display-4">The application has reached the maximum Accuweather API request limit. <br /><br />Please try again later.</h1>

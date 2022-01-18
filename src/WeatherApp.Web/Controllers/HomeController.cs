@@ -11,7 +11,6 @@ using WeatherApp.BLL.Interfaces;
 using WeatherApp.BLL.Models;
 using WeatherApp.DAL.Data;
 using WeatherApp.DAL.Entities;
-using WeatherApp.Models;
 using WeatherApp.Web.ViewModels;
 
 namespace WeatherApp.Controllers
@@ -47,8 +46,8 @@ namespace WeatherApp.Controllers
 
                 if (String.IsNullOrWhiteSpace(cityName))
                 {
-                    TempData["isCityNameEmpty"] = "true";
-                    return RedirectToAction("ShowWeatherResponse", "Home");
+                    TempData["isCityNameEmpty"] = true;
+                    return RedirectToAction("ShowWeatherResponse");
                 }
                 else
                 {
@@ -76,7 +75,7 @@ namespace WeatherApp.Controllers
 
                 TempData["Weather_Info"] = JsonConvert.SerializeObject(weatherInfoDTO);
                 TempData.Keep("Weather_Info");
-                return RedirectToAction("ShowWeatherResponse", "Home");
+                return RedirectToAction("ShowWeatherResponse");
             }
 
             return RedirectToAction("Index");
@@ -87,9 +86,9 @@ namespace WeatherApp.Controllers
         [HttpGet]
         public IActionResult ShowWeatherResponse()
         {
-            if((String)TempData["isCityNameEmpty"] == "true")
+            if(TempData["isCityNameEmpty"] != null && (bool)TempData["isCityNameEmpty"])
             {
-                ViewData["TextResponse"] = "invalid city name";
+                ViewData["TextResponse"] = "Invalid city name";
                 return View();
             }
             else
@@ -101,12 +100,12 @@ namespace WeatherApp.Controllers
 
                 if (weatherInfoDTO.isStatusNotFound)
                 {
-                    ViewData["TextResponse"] = "invalid city name";
+                    ViewData["TextResponse"] = "Invalid city name";
                     return View();
                 }
                 else if (weatherInfoDTO.isStatusOther)
                 {
-                    ViewData["TextResponse"] = "api service unavailable";
+                    ViewData["TextResponse"] = "API service unavailable";
                     return View();
                 }
                 else
@@ -118,9 +117,9 @@ namespace WeatherApp.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetAutocompleteList(string cityName)
+        public async Task<JsonResult> GetAutocompleteList(string cityName)
         {
-            var cityNameList = _context.Cities.Where(s => s.Name.Contains(cityName)).Take(8).Select(p => new { p.Name, p.State, p.Country, p.CityCode }).ToList();
+            var cityNameList = await _context.Cities.Where(s => s.Name.Contains(cityName)).Take(8).Select(p => new { p.Name, p.State, p.Country, p.CityCode }).ToListAsync();
 
             return Json(cityNameList);
         }
@@ -139,17 +138,6 @@ namespace WeatherApp.Controllers
             }
 
             return cityRecord?.CityCode;
-        }
-        
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

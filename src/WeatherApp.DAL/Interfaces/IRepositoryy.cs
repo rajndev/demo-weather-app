@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WeatherApp.DAL.Interfaces
 {
-    public interface IRepository<TEntity> where TEntity : class
+    public interface IRepositoryy<TEntity> where TEntity : class
     {
         IQueryable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
