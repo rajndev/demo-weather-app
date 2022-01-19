@@ -5,6 +5,6 @@ namespace WeatherApp.BLL.Interfaces
 {
     public interface IWeatherService
     {
-        Task<WeatherInfoDTO> GetCurrentWeather(string apiKey, string cityName = null, int? cityId = 0);
+        Task<WeatherInfoDTO> GetCurrentWeather(string cityName, string apiKey);
     }
 }

@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using WeatherApp.BLL.HelperClasses;
 using WeatherApp.BLL.Interfaces;
 using WeatherApp.BLL.Models;
+using WeatherApp.DAL.Data;
+using WeatherApp.DAL.Entities;
 
 namespace WeatherApp.BLL.Services
 {
@@ -13,21 +17,35 @@ namespace WeatherApp.BLL.Services
         private readonly IMapper _mapper;
         private WeatherAPIProcessor _apiProcessorSingleton;
         private WeatherInfoRoot _apiResponse;
-        public WeatherService(IMapper mapper)
+        private readonly ApplicationDbContext _context;
+        public WeatherService(IMapper mapper, ApplicationDbContext context)
         {
             _mapper = mapper;
             _apiProcessorSingleton = WeatherAPIProcessor.GetInstance();
             _apiProcessorSingleton.BaseAPIUrl = BaseAPIUrls.GET_CURRENT_WEATHER;
+            _context = context;
         }
 
-        public async Task<WeatherInfoDTO> GetCurrentWeather(string apiKey, string cityName = null, int? cityId = 0)
+        public async Task<WeatherInfoDTO> GetCurrentWeather(string cityName, string apiKey)
         {
             int httpResponse;
+            int? cityCode = null;
             WeatherInfoDTO weatherInfoDTO = new WeatherInfoDTO();
 
-            if (cityId > 0)
+            var split = cityName.Split(",");
+
+            if (split.Length == 3)
             {
-                var query = $"id={cityId}&appid={apiKey}&units=imperial";
+                cityCode = await GetCityCode(split, 3);
+            }
+            else if (split.Length == 2)
+            {
+                cityCode = await GetCityCode(split, 2);
+            }
+
+            if (cityCode != null)
+            {
+                var query = $"id={cityCode}&appid={apiKey}&units=imperial";
                 httpResponse = await _apiProcessorSingleton.CallWeatherApi(query);
             }
             else
@@ -87,6 +105,22 @@ namespace WeatherApp.BLL.Services
             var humanReadableTime = dateTimeOffset.DateTime.ToString("t");
 
             return Tuple.Create(humanReadableDate, humanReadableTime, isDaytime);
+        }
+
+        public async Task<int?> GetCityCode(string[] split, int length)
+        {
+            City cityRecord = null;
+
+            if (length == 3)
+            {
+                cityRecord = await _context.Cities.Where(p => p.Name == split[0].Trim() && p.State == split[1].Trim() && p.Country == split[2].Trim()).FirstOrDefaultAsync();
+            }
+            else if (length == 2)
+            {
+                cityRecord = await _context.Cities.Where(p => p.Name == split[0].Trim() && p.State == split[1].Trim()).FirstOrDefaultAsync();
+            }
+
+            return cityRecord?.CityCode;
         }
     }
 }

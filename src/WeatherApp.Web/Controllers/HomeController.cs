@@ -4,13 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using WeatherApp.BLL.Interfaces;
 using WeatherApp.BLL.Models;
 using WeatherApp.DAL.Data;
-using WeatherApp.DAL.Entities;
 using WeatherApp.Web.ViewModels;
 
 namespace WeatherApp.Controllers
@@ -36,13 +34,12 @@ namespace WeatherApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SearchWeather(
-            string cityName)
+        public async Task<IActionResult> SearchWeather(string cityName)
         {
             if (ModelState.IsValid)
             {
                 var apiKey = _config.GetValue<string>("OpenWeatherMapAPIKey");
-                WeatherInfoDTO weatherInfoDTO = null;
+                WeatherInfoDTO weatherInfoDTO;
 
                 if (String.IsNullOrWhiteSpace(cityName))
                 {
@@ -51,26 +48,7 @@ namespace WeatherApp.Controllers
                 }
                 else
                 {
-                    var split = cityName.Split(",");
-                    int? cityCode = null;
-
-                    if (split.Length == 3)
-                    {
-                        cityCode = await GetCityCode(split, 3);
-                    }
-                    else if (split.Length == 2)
-                    {
-                        cityCode = await GetCityCode(split, 2);
-                    }
-
-                    if (cityCode != null)
-                    {
-                        weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityName, cityId: cityCode);
-                    }
-                    else
-                    {
-                        weatherInfoDTO = await _weatherService.GetCurrentWeather(apiKey: apiKey, cityName: cityName);
-                    }
+                    weatherInfoDTO = await _weatherService.GetCurrentWeather(cityName, apiKey);
                 }
 
                 TempData["Weather_Info"] = JsonConvert.SerializeObject(weatherInfoDTO);
@@ -80,8 +58,6 @@ namespace WeatherApp.Controllers
 
             return RedirectToAction("Index");
         }
-
-
 
         [HttpGet]
         public IActionResult ShowWeatherResponse()
@@ -124,20 +100,6 @@ namespace WeatherApp.Controllers
             return Json(cityNameList);
         }
 
-        public async Task<int?> GetCityCode(string[] split, int length)
-        {
-            City cityRecord = null;
-
-            if(length == 3)
-            {
-                cityRecord = await _context.Cities.Where(p => p.Name == split[0].Trim() && p.State == split[1].Trim() && p.Country == split[2].Trim()).FirstOrDefaultAsync();
-            }  
-            else if(length == 2)
-            {
-                cityRecord = await _context.Cities.Where(p => p.Name == split[0].Trim() && p.State == split[1].Trim()).FirstOrDefaultAsync();
-            }
-
-            return cityRecord?.CityCode;
-        }
+        
     }
 }
