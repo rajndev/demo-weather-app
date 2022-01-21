@@ -15,22 +15,22 @@ namespace WeatherApp.BLL.Services
     public class WeatherService : IWeatherService
     {
         private readonly IMapper _mapper;
-        private WeatherAPIProcessor _apiProcessorSingleton;
+        private WeatherApiProcessor _apiProcessorSingleton;
         private WeatherInfoRoot _apiResponse;
         private readonly ApplicationDbContext _context;
         public WeatherService(IMapper mapper, ApplicationDbContext context)
         {
             _mapper = mapper;
-            _apiProcessorSingleton = WeatherAPIProcessor.GetInstance();
-            _apiProcessorSingleton.BaseAPIUrl = BaseAPIUrls.GET_CURRENT_WEATHER;
+            _apiProcessorSingleton = WeatherApiProcessor.GetInstance();
+            _apiProcessorSingleton.BaseAPIUrl = BaseApiUrls.GET_CURRENT_WEATHER;
             _context = context;
         }
 
-        public async Task<WeatherInfoDTO> GetCurrentWeather(string cityName, string apiKey)
+        public async Task<WeatherInfoDto> GetCurrentWeather(string cityName, string apiKey)
         {
             int httpResponse;
             int? cityCode = null;
-            WeatherInfoDTO weatherInfoDTO = new WeatherInfoDTO();
+            WeatherInfoDto weatherInfoDTO = new WeatherInfoDto();
 
             var split = cityName.Split(",");
 
@@ -58,7 +58,7 @@ namespace WeatherApp.BLL.Services
             {
                 _apiResponse = _apiProcessorSingleton.GetApiResponseData();
 
-                weatherInfoDTO = _mapper.Map<WeatherInfoDTO>(_apiResponse);
+                weatherInfoDTO = _mapper.Map<WeatherInfoDto>(_apiResponse);
 
                 var currentDateTime = GetDateTimeFromEpoch(
                     _apiResponse.Sys.Sunrise,

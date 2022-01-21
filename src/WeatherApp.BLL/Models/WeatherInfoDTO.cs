@@ -1,6 +1,6 @@
 ﻿namespace WeatherApp.BLL.Models
 {
-    public class WeatherInfoDTO
+    public class WeatherInfoDto
     {
         public string CityName { get; set; }
         public string CityDate { get; set; }

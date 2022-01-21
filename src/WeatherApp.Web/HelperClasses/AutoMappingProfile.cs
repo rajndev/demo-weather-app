@@ -10,11 +10,11 @@ namespace WeatherApp.HelperClasses
         {
             //Home controller
 
-            CreateMap<WeatherInfoDTO, CurrentWeatherViewModel>();
+            CreateMap<WeatherInfoDto, CurrentWeatherViewModel>();
 
             //Weather Service
 
-            CreateMap<WeatherInfoRoot, WeatherInfoDTO>()
+            CreateMap<WeatherInfoRoot, WeatherInfoDto>()
                 .ForMember(destProp => destProp.WeatherCondition, act => act.MapFrom(srcProp => srcProp.Weather[0].Description))
                 .ForMember(destProp => destProp.Icon, act => act.MapFrom(srcProp => srcProp.Weather[0].Icon))
                 .ForMember(destProp => destProp.Temperature, act => act.MapFrom(srcProp => srcProp.Main.Temp));

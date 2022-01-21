@@ -5,20 +5,20 @@ using WeatherApp.BLL.Models;
 
 namespace WeatherApp.BLL.HelperClasses
 { //Todo: Json parser from API instead of automapper
-    public class WeatherAPIProcessor
+    public class WeatherApiProcessor
     {
-        private WeatherAPIProcessor() { }
+        private WeatherApiProcessor() { }
 
-        private static WeatherAPIProcessor _instance;
+        private static WeatherApiProcessor _instance;
         private static HttpClient _apiClient = new HttpClient();
         private WeatherInfoRoot _apiResponseData;
         public string BaseAPIUrl { get; set; }
 
-        public static WeatherAPIProcessor GetInstance()
+        public static WeatherApiProcessor GetInstance()
         {
             if (_instance == null)
             {
-                _instance = new WeatherAPIProcessor();
+                _instance = new WeatherApiProcessor();
             }
             return _instance;
         }

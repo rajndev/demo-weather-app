@@ -39,7 +39,7 @@ namespace WeatherApp.Controllers
             if (ModelState.IsValid)
             {
                 var apiKey = _config.GetValue<string>("OpenWeatherMapAPIKey");
-                WeatherInfoDTO weatherInfoDTO;
+                WeatherInfoDto weatherInfoDTO;
 
                 if (String.IsNullOrWhiteSpace(cityName))
                 {
@@ -72,7 +72,7 @@ namespace WeatherApp.Controllers
                 TempData.Keep("Weather_Info");
                 var storedResults = TempData["Weather_Info"].ToString();
 
-                WeatherInfoDTO weatherInfoDTO = JsonConvert.DeserializeObject<WeatherInfoDTO>(storedResults);
+                WeatherInfoDto weatherInfoDTO = JsonConvert.DeserializeObject<WeatherInfoDto>(storedResults);
 
                 if (weatherInfoDTO.isStatusNotFound)
                 {
