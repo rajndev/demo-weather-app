@@ -17,7 +17,7 @@ This is a demo weather app built using C# and ASP.NET Core MVC. It displays the 
 
 ## Usage
 
-To search for the current weather conditions for a city of interest, enter the city name into the search box and click the `Get Weather` button.
+To search for the current weather conditions for a city of interest, enter the city name into the search box and click the `Get Weather` button. Typing the state and country are optional.
 
 ## Technology Stacks and Tools Used
 
