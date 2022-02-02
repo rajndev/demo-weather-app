@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherApp.BLL", "src\Weath
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeatherApp.DAL", "src\WeatherApp.DAL\WeatherApp.DAL.csproj", "{9F09FB8E-FB8C-4092-8C04-0E608DB88AF1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B1D8A6B6-6583-42E1-A373-A165D06C7CCE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,11 +30,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{B5D80380-88BF-409A-8775-57DD0EECC557} = {B1D8A6B6-6583-42E1-A373-A165D06C7CCE}
-		{D32F16D6-3ED6-4ADF-828F-2CE7D9E53284} = {B1D8A6B6-6583-42E1-A373-A165D06C7CCE}
-		{9F09FB8E-FB8C-4092-8C04-0E608DB88AF1} = {B1D8A6B6-6583-42E1-A373-A165D06C7CCE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {523EE97D-9EEA-4DF5-B5F5-AB43A5585C77}
