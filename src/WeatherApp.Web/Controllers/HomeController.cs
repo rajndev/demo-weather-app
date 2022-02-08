@@ -62,7 +62,7 @@ namespace WeatherApp.Controllers
         [HttpGet]
         public IActionResult ShowWeatherResponse()
         {
-            if(TempData["isCityNameEmpty"] != null && (bool)TempData["isCityNameEmpty"])
+            if (TempData["isCityNameEmpty"] != null && (bool)TempData["isCityNameEmpty"])
             {
                 ViewData["TextResponse"] = "Invalid city name";
                 return View();
@@ -99,7 +99,5 @@ namespace WeatherApp.Controllers
 
             return Json(cityNameList);
         }
-
-        
     }
 }
