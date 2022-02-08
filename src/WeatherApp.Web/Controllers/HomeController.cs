@@ -4,28 +4,35 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using WeatherApp.BLL.Interfaces;
 using WeatherApp.BLL.Models;
 using WeatherApp.DAL.Data;
 using WeatherApp.Web.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 
 namespace WeatherApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IWeatherService _weatherService;
+        private readonly IWebHostEnvironment _env;
         private readonly IConfiguration _config;
+        private readonly IWeatherService _weatherService;
         private readonly IMapper _mapper;
         private readonly ApplicationDbContext _context;
 
-        public HomeController(IWeatherService weatherService, IConfiguration config, IMapper mapper, ApplicationDbContext context)
+
+        public HomeController(IWeatherService weatherService, IConfiguration config, IMapper mapper, ApplicationDbContext context, IWebHostEnvironment env)
         {
+            _env = env;
             _weatherService = weatherService;
             _config = config;
             _mapper = mapper;
             _context = context;
+
+            
         }
 
         public IActionResult Index()
@@ -38,7 +45,25 @@ namespace WeatherApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var apiKey = _config.GetValue<string>("OpenWeatherMapAPIKey");
+                string apiKey = null;
+
+                if (_env.EnvironmentName == "Development")
+                {
+                    ExeConfigurationFileMap map = new ExeConfigurationFileMap();
+                    map.ExeConfigFilename = @"D:\DevProjects\VS Projects\WeatherAppApiKey.config";
+
+                    Configuration libConfig = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
+
+                    AppSettingsSection config = (libConfig.GetSection("appSettings") as AppSettingsSection);
+
+                    apiKey = config.Settings["OpenWeatherMapAPIKey"].Value;
+
+                }
+                else
+                {
+                    apiKey = _config.GetValue<string>("OpenWeatherMapAPIKey");
+                }
+
                 WeatherInfoDto weatherInfoDTO;
 
                 if (String.IsNullOrWhiteSpace(cityName))
