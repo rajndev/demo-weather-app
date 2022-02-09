@@ -1,31 +1,58 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Hosting;
+using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
 using WeatherApp.BLL.Models;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
+using WeatherApp.BLL.Interfaces;
 
 namespace WeatherApp.BLL.HelperClasses
-{ //Todo: Json parser from API instead of automapper
-    public class WeatherApiProcessor
+{
+    public class WeatherApiProcessor : IWeatherApiProcessor
     {
-        private WeatherApiProcessor() { }
-
-        private static WeatherApiProcessor _instance;
         private static HttpClient _apiClient = new HttpClient();
         private WeatherInfoRoot _apiResponseData;
-        public string BaseAPIUrl { get; set; }
+        private readonly IWebHostEnvironment _env;
+        private readonly IConfiguration _config;
+        private string _apiKey;
+        public const string GET_CURRENT_WEATHER = "http://api.openweathermap.org/data/2.5/weather?";
 
-        public static WeatherApiProcessor GetInstance()
+        public string ApiKey
         {
-            if (_instance == null)
+            get { return _apiKey; }
+        }
+
+        public WeatherApiProcessor(IWebHostEnvironment env, IConfiguration config)
+        {
+            _env = env;
+            _config = config;
+
+            SetApiKey();
+        }
+
+        private void SetApiKey()
+        {
+            if (_env.EnvironmentName == "Development")
             {
-                _instance = new WeatherApiProcessor();
+                ExeConfigurationFileMap map = new ExeConfigurationFileMap();
+                map.ExeConfigFilename = @"D:\DevProjects\VS Projects\WeatherAppApiKey.config";
+
+                Configuration libConfig = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
+
+                AppSettingsSection config = (libConfig.GetSection("appSettings") as AppSettingsSection);
+
+                _apiKey = config.Settings["OpenWeatherMapAPIKey"].Value;
             }
-            return _instance;
+            else
+            {
+                _apiKey = _config.GetValue<string>("OpenWeatherMapAPIKey");
+            }
         }
 
         public async Task<int> CallWeatherApi(string query)
         {
-            var response = await _apiClient.GetAsync($"{BaseAPIUrl}{query}");
+            var response = await _apiClient.GetAsync($"{GET_CURRENT_WEATHER}{query}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -35,7 +62,6 @@ namespace WeatherApp.BLL.HelperClasses
             var statusCode = (int)response.StatusCode;
 
             return statusCode;
-
         }
 
         public WeatherInfoRoot GetApiResponseData()

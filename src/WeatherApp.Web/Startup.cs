@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WeatherApp.BLL.HelperClasses;
 using WeatherApp.BLL.Interfaces;
 using WeatherApp.BLL.Services;
 using WeatherApp.DAL.Data;
@@ -36,6 +37,7 @@ namespace WeatherApp
             services.AddRazorPages();
 
             services.AddTransient<IWeatherService, WeatherService>();
+            services.AddSingleton<IWeatherApiProcessor, WeatherApiProcessor>();
             services.AddTransient<IDbInitializer, DbInitializer>();
             services.AddAutoMapper(c => c.AddProfile<AutoMappingProfile>(), typeof(Startup));
         }

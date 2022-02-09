@@ -4,7 +4,6 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using WeatherApp.BLL.HelperClasses;
 using WeatherApp.BLL.Interfaces;
 using WeatherApp.BLL.Models;
 using WeatherApp.DAL.Data;
@@ -15,18 +14,18 @@ namespace WeatherApp.BLL.Services
     public class WeatherService : IWeatherService
     {
         private readonly IMapper _mapper;
-        private WeatherApiProcessor _apiProcessorSingleton;
+        private IWeatherApiProcessor _apiProcessor;
         private WeatherInfoRoot _apiResponse;
         private readonly ApplicationDbContext _context;
-        public WeatherService(IMapper mapper, ApplicationDbContext context)
+
+        public WeatherService(IMapper mapper, IWeatherApiProcessor apiProcessor, ApplicationDbContext context)
         {
             _mapper = mapper;
-            _apiProcessorSingleton = WeatherApiProcessor.GetInstance();
-            _apiProcessorSingleton.BaseAPIUrl = BaseApiUrls.GET_CURRENT_WEATHER;
+            _apiProcessor = apiProcessor;
             _context = context;
         }
 
-        public async Task<WeatherInfoDto> GetCurrentWeather(string cityName, string apiKey)
+        public async Task<WeatherInfoDto> GetCurrentWeather(string cityName)
         {
             int httpResponse;
             int? cityCode = null;
@@ -45,18 +44,18 @@ namespace WeatherApp.BLL.Services
 
             if (cityCode != null)
             {
-                var query = $"id={cityCode}&appid={apiKey}&units=imperial";
-                httpResponse = await _apiProcessorSingleton.CallWeatherApi(query);
+                var query = $"id={cityCode}&appid={_apiProcessor.ApiKey}&units=imperial";
+                httpResponse = await _apiProcessor.CallWeatherApi(query);
             }
             else
             {
-                var query = $"q={cityName}&appid={apiKey}&units=imperial";
-                httpResponse = await _apiProcessorSingleton.CallWeatherApi(query);
+                var query = $"q={cityName}&appid={_apiProcessor.ApiKey}&units=imperial";
+                httpResponse = await _apiProcessor.CallWeatherApi(query);
             }
 
-            if(httpResponse == 200)
+            if (httpResponse == 200)
             {
-                _apiResponse = _apiProcessorSingleton.GetApiResponseData();
+                _apiResponse = _apiProcessor.GetApiResponseData();
 
                 weatherInfoDTO = _mapper.Map<WeatherInfoDto>(_apiResponse);
 
@@ -76,7 +75,7 @@ namespace WeatherApp.BLL.Services
                 cityName = CapitalizeText(cityName);
                 weatherInfoDTO.CityName = cityName;
             }
-            else if(httpResponse == 404)
+            else if (httpResponse == 404)
             {
                 weatherInfoDTO.isStatusNotFound = true;
             }
