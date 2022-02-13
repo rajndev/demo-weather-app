@@ -13,7 +13,6 @@ namespace WeatherApp.BLL.HelperClasses
     {
         private static HttpClient _apiClient = new HttpClient();
         private WeatherInfoRoot _apiResponseData;
-        private readonly IWebHostEnvironment _env;
         private readonly IConfiguration _config;
         private string _apiKey;
         public const string GET_CURRENT_WEATHER = "http://api.openweathermap.org/data/2.5/weather?";
@@ -23,9 +22,8 @@ namespace WeatherApp.BLL.HelperClasses
             get { return _apiKey; }
         }
 
-        public WeatherApiProcessor(IWebHostEnvironment env, IConfiguration config)
+        public WeatherApiProcessor(IConfiguration config)
         {
-            _env = env;
             _config = config;
 
             SetApiKey();
@@ -33,21 +31,7 @@ namespace WeatherApp.BLL.HelperClasses
 
         private void SetApiKey()
         {
-            if (_env.EnvironmentName == "Development")
-            {
-                ExeConfigurationFileMap map = new ExeConfigurationFileMap();
-                map.ExeConfigFilename = @"D:\DevProjects\VS Projects\WeatherAppApiKey.config";
-
-                Configuration libConfig = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
-
-                AppSettingsSection config = (libConfig.GetSection("appSettings") as AppSettingsSection);
-
-                _apiKey = config.Settings["OpenWeatherMapAPIKey"].Value;
-            }
-            else
-            {
-                _apiKey = _config.GetValue<string>("OpenWeatherMapAPIKey");
-            }
+            _apiKey = _config.GetValue<string>("OpenWeatherMapAPIKey");
         }
 
         public async Task<int> CallWeatherApi(string query)
