@@ -33,6 +33,7 @@ namespace WeatherApp
                     ServiceLifetime.Scoped
                     );
 
+            //test
             services.AddControllersWithViews();
             services.AddRazorPages();
 
