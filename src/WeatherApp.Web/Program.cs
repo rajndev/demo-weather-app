@@ -27,7 +27,7 @@ namespace WeatherApp
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>().UseUrls("http://localhost:6000/"); ;
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }
