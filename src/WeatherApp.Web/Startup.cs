@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WeatherApp.BLL.HelperClasses;
 using WeatherApp.BLL.Interfaces;
 using WeatherApp.BLL.Services;
 using WeatherApp.DAL.Data;
 using WeatherApp.DAL.Interfaces;
 using WeatherApp.HelperClasses;
+using Refit;
 
 namespace WeatherApp
 {
@@ -38,9 +38,10 @@ namespace WeatherApp
             services.AddRazorPages();
 
             services.AddTransient<IWeatherService, WeatherService>();
-            services.AddSingleton<IWeatherApiProcessor, WeatherApiProcessor>();
             services.AddTransient<IDbInitializer, DbInitializer>();
             services.AddAutoMapper(c => c.AddProfile<AutoMappingProfile>(), typeof(Startup));
+
+            services.AddRefitClient<IOpenWeatherAppApiService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

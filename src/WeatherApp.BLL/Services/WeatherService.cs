@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Refit;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -14,22 +16,26 @@ namespace WeatherApp.BLL.Services
     public class WeatherService : IWeatherService
     {
         private readonly IMapper _mapper;
-        private IWeatherApiProcessor _apiProcessor;
-        private WeatherInfoRoot _apiResponse;
         private readonly ApplicationDbContext _context;
 
-        public WeatherService(IMapper mapper, IWeatherApiProcessor apiProcessor, ApplicationDbContext context)
+        private readonly IConfiguration _config;
+        private readonly string _apiKey;
+        private readonly IOpenWeatherAppApiService _apiService;
+
+        public WeatherService(IMapper mapper, ApplicationDbContext context, IConfiguration config)
         {
             _mapper = mapper;
-            _apiProcessor = apiProcessor;
             _context = context;
+            _config = config;
+            _apiKey = _config.GetValue<string>("OpenWeatherMap:APIKey");
+            _apiService = RestService.For<IOpenWeatherAppApiService>("http://api.openweathermap.org/data/2.5");
         }
 
         public async Task<WeatherInfoDto> GetCurrentWeather(string cityName)
         {
-            int httpResponse;
             int? cityCode = null;
             WeatherInfoDto weatherInfoDTO = new WeatherInfoDto();
+            ApiResponse<WeatherInfoRoot> apiResponse;
 
             var split = cityName.Split(",");
 
@@ -44,26 +50,23 @@ namespace WeatherApp.BLL.Services
 
             if (cityCode != null)
             {
-                var query = $"id={cityCode}&appid={_apiProcessor.ApiKey}&units=imperial";
-                httpResponse = await _apiProcessor.CallWeatherApi(query);
+                apiResponse = await _apiService.GetWeatherInfoByCityCode(cityCode, _apiKey);
             }
             else
             {
-                var query = $"q={cityName}&appid={_apiProcessor.ApiKey}&units=imperial";
-                httpResponse = await _apiProcessor.CallWeatherApi(query);
+                apiResponse = await _apiService.GetWeatherInfoByCityName(cityName, _apiKey);
             }
 
-            if (httpResponse == 200)
+            if ((int)apiResponse.StatusCode == 200)
             {
-                _apiResponse = _apiProcessor.GetApiResponseData();
-
-                weatherInfoDTO = _mapper.Map<WeatherInfoDto>(_apiResponse);
+                weatherInfoDTO = _mapper.Map<WeatherInfoDto>(apiResponse.Content);
 
                 var currentDateTime = GetDateTimeFromEpoch(
-                    _apiResponse.Sys.Sunrise,
-                     _apiResponse.Sys.Sunset,
-                     _apiResponse.Dt,
-                     _apiResponse.Timezone);
+                    apiResponse.Content.Sys.Sunrise,
+                    apiResponse.Content.Sys.Sunset,
+                    apiResponse.Content.Dt,
+                    apiResponse.Content.Timezone
+                    );
 
                 weatherInfoDTO.CityDate = currentDateTime.Item1;
                 weatherInfoDTO.CityTime = currentDateTime.Item2;
@@ -71,11 +74,10 @@ namespace WeatherApp.BLL.Services
                 weatherInfoDTO.isStatusOK = true;
 
                 //capitalize each word in the city name
-
-                cityName = CapitalizeText(cityName);
+                cityName = CapitalizeCityName(cityName);
                 weatherInfoDTO.CityName = cityName;
             }
-            else if (httpResponse == 404)
+            else if ((int)apiResponse.StatusCode == 404)
             {
                 weatherInfoDTO.isStatusNotFound = true;
             }
@@ -87,7 +89,7 @@ namespace WeatherApp.BLL.Services
             return weatherInfoDTO;
         }
 
-        private string CapitalizeText(string cityName)
+        private string CapitalizeCityName(string cityName)
         {
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             cityName = textInfo.ToTitleCase(cityName);
