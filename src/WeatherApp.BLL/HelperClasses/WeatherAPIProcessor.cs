@@ -31,7 +31,7 @@ namespace WeatherApp.BLL.HelperClasses
 
         private void SetApiKey()
         {
-            _apiKey = _config.GetValue<string>("OpenWeatherMapAPIKey");
+            _apiKey = _config.GetValue<string>("OpenWeatherMap:APIKey");
         }
 
         public async Task<int> CallWeatherApi(string query)
