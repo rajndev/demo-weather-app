@@ -6,19 +6,19 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using WeatherApp.BLL.Interfaces;
-using WeatherApp.BLL.Models;
+using WeatherApp.Common.Models;
 using WeatherApp.DAL.Data;
 using WeatherApp.Web.ViewModels;
 
 namespace WeatherApp.Controllers
 {
-    public class HomeController : Controller
+    public class WeatherController : Controller
     {
         private readonly IWeatherService _weatherService;
         private readonly IMapper _mapper;
         private readonly ApplicationDbContext _context;
 
-        public HomeController(IWeatherService weatherService, IMapper mapper, ApplicationDbContext context)
+        public WeatherController(IWeatherService weatherService, IMapper mapper, ApplicationDbContext context)
         {
             _weatherService = weatherService;
             _mapper = mapper;

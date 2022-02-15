@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using WeatherApp.BLL.Models;
+using WeatherApp.Common.Models;
 using WeatherApp.Web.ViewModels;
 
 namespace WeatherApp.HelperClasses

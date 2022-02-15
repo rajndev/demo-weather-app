@@ -1,8 +1,7 @@
 ﻿using Refit;
-using System.Threading.Tasks;
-using WeatherApp.BLL.Models;
+using WeatherApp.Common.Models;
 
-namespace WeatherApp.BLL.Interfaces
+namespace WeatherApp.ApiClient.Interfaces
 {
     public interface IOpenWeatherAppApiService
     {
