@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WeatherApp.BLL\WeatherApp.BLL.csproj" />
-    <ProjectReference Include="..\WeatherApp.DAL\WeatherApp.DAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
