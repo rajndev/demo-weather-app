@@ -2,7 +2,7 @@
     $("#searchterm").autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: '/Home/GetAutocompleteList',
+                url: '/Weather/GetAutocompleteList',
                 data: { "cityname": request.term },
                 type: "POST",
                 success: function (data) {

@@ -70,21 +70,23 @@ namespace WeatherApp.Controllers
 
                 WeatherInfoDto weatherInfoDTO = JsonConvert.DeserializeObject<WeatherInfoDto>(storedResults);
 
-                if (weatherInfoDTO.isStatusNotFound)
-                {
-                    ViewData["TextResponse"] = "Invalid city name";
-                    return View();
-                }
-                else if (weatherInfoDTO.isStatusOther)
-                {
-                    ViewData["TextResponse"] = "API service unavailable";
-                    return View();
-                }
-                else
-                {
-                    var currentWeatherViewModel = _mapper.Map<CurrentWeatherViewModel>(weatherInfoDTO);
-                    return View(currentWeatherViewModel);
-                }
+                return View();
+
+                //if (weatherInfoDTO.isStatusNotFound)
+                //{
+                //    ViewData["TextResponse"] = "Invalid city name";
+                //    return View();
+                //}
+                //else if (weatherInfoDTO.isStatusOther)
+                //{
+                //    ViewData["TextResponse"] = "API service unavailable";
+                //    return View();
+                //}
+                //else
+                //{
+                //    var currentWeatherViewModel = _mapper.Map<CurrentWeatherViewModel>(weatherInfoDTO);
+                //    return View(currentWeatherViewModel);
+                //}
             }
         }
 
