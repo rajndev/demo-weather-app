@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WeatherApp.ApiClient.DependencyInjection;
 using WeatherApp.BLL.DependencyInjection;
 using WeatherApp.DAL.DependencyInjection;
 
@@ -26,6 +27,7 @@ namespace WeatherApp
             services.AddControllerDependencies();
             services.AddDALDependencies(Configuration);
             services.AddBLLDependencies();
+            services.AddApiClientDependencies(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
