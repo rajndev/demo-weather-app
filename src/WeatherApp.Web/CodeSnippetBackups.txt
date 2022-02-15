@@ -160,3 +160,8 @@
                                                     //            .appendTo(ul);
                                                     //    };
                                                     //});
+
+
+
+                                                          "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
