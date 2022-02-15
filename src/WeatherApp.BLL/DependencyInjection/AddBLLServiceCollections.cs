@@ -8,7 +8,7 @@ namespace WeatherApp.BLL.DependencyInjection
     {
         public static IServiceCollection AddBLLDependencies(this IServiceCollection services)
         {
-            services.AddTransient<IWeatherService, WeatherService>();
+            services.AddSingleton<IWeatherService, WeatherService>();
 
             return services;
         }

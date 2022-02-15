@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Refit;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -32,13 +33,12 @@ namespace WeatherApp.BLL.Services
         {
             int? cityCode = null;
             WeatherInfoDto weatherInfoDTO = new WeatherInfoDto();
-            //ApiResult<WeatherInfoRoot> apiResponse;
 
             var split = cityName.Split(",");
 
             cityCode = await GetCityCodeAsync(split, split.Length);
 
-           var apiResponse = cityCode != null ? await _apiService.GetWeatherInfoByCityCode(cityCode, _apiKey) : await _apiService.GetWeatherInfoByCityName(cityName, _apiKey);
+            var apiResponse = cityCode != null ? await _apiService.GetWeatherInfoByCityCode(cityCode, _apiKey) : await _apiService.GetWeatherInfoByCityName(cityName, _apiKey);
 
             if ((int)apiResponse.StatusCode == 200)
             {
