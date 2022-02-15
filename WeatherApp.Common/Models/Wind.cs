@@ -1,4 +1,5 @@
-﻿namespace WeatherApp.BLL.Models
+﻿namespace WeatherApp.Common.Models
+
 {
     public class Wind
     {

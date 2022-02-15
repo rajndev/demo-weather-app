@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using WeatherApp.BLL.Models;
+using WeatherApp.Common.Models;
 
 namespace WeatherApp.BLL.Interfaces
 {
