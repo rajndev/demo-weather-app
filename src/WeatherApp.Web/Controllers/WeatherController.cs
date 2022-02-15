@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WeatherApp.BLL.Interfaces;
 using WeatherApp.Common.Models;
 using WeatherApp.DAL.Data;
+using WeatherApp.Web.HelperClasses;
 using WeatherApp.Web.ViewModels;
 
 namespace WeatherApp.Controllers
@@ -35,20 +36,18 @@ namespace WeatherApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                WeatherInfoDto weatherInfoDTO;
+                ApiResult<WeatherInfoRoot> apiResponseDto;
 
                 if (String.IsNullOrWhiteSpace(cityName))
                 {
                     TempData["isCityNameEmpty"] = true;
-                    return RedirectToAction("ShowWeatherResponse");
                 }
                 else
                 {
-                    weatherInfoDTO = await _weatherService.GetCurrentWeather(cityName);
+                    apiResponseDto = await _weatherService.GetCurrentWeather(cityName);
+                    TempData["Weather_Info"] = JsonConvert.SerializeObject(apiResponseDto);
                 }
 
-                TempData["Weather_Info"] = JsonConvert.SerializeObject(weatherInfoDTO);
-                TempData.Keep("Weather_Info");
                 return RedirectToAction("ShowWeatherResponse");
             }
 
@@ -57,36 +56,34 @@ namespace WeatherApp.Controllers
 
         [HttpGet]
         public IActionResult ShowWeatherResponse()
-        {
+        {//todo: test to see if empty city name throws proper error message
+            /*TempData["isCityNameEmpty"] != null && */
+
             if (TempData["isCityNameEmpty"] != null && (bool)TempData["isCityNameEmpty"])
             {
                 ViewData["TextResponse"] = "Invalid city name";
                 return View();
             }
+
+            TempData.Keep("Weather_Info");
+            var storedResults = TempData["Weather_Info"].ToString();
+
+            var apiResponseDto = JsonConvert.DeserializeObject<ApiResult<WeatherInfoRoot>>(storedResults);
+
+            if ((int)apiResponseDto.StatusCode == (int)StatusCodes.NotFound)
+            {
+                ViewData["TextResponse"] = "Invalid city name";
+                return View();
+            }
+            else if ((int)apiResponseDto.StatusCode == (int)StatusCodes.ServiceUnavailable)
+            {
+                ViewData["TextResponse"] = "API service unavailable";
+                return View();
+            }
             else
             {
-                TempData.Keep("Weather_Info");
-                var storedResults = TempData["Weather_Info"].ToString();
-
-                WeatherInfoDto weatherInfoDTO = JsonConvert.DeserializeObject<WeatherInfoDto>(storedResults);
-
-                return View();
-
-                //if (weatherInfoDTO.isStatusNotFound)
-                //{
-                //    ViewData["TextResponse"] = "Invalid city name";
-                //    return View();
-                //}
-                //else if (weatherInfoDTO.isStatusOther)
-                //{
-                //    ViewData["TextResponse"] = "API service unavailable";
-                //    return View();
-                //}
-                //else
-                //{
-                //    var currentWeatherViewModel = _mapper.Map<CurrentWeatherViewModel>(weatherInfoDTO);
-                //    return View(currentWeatherViewModel);
-                //}
+                var currentWeatherViewModel = _mapper.Map<CurrentWeatherViewModel>(apiResponseDto);
+                return View(currentWeatherViewModel);
             }
         }
 
