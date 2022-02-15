@@ -29,10 +29,10 @@ namespace WeatherApp.BLL.Services
             _apiKey = config.GetValue<string>("OpenWeatherMapApiOptions:APIKey");
         }
 
-        public async Task<WeatherInfoDto> GetCurrentWeather(string cityName)
+        public async Task<ApiResult<WeatherInfoRoot>> GetCurrentWeather(string cityName)
         {
             int? cityCode = null;
-            WeatherInfoDto weatherInfoDTO = new WeatherInfoDto();
+            var apiResponseDto = new ApiResult<WeatherInfoRoot>();
 
             var split = cityName.Split(",");
 
@@ -40,9 +40,15 @@ namespace WeatherApp.BLL.Services
 
             var apiResponse = cityCode != null ? await _apiService.GetWeatherInfoByCityCode(cityCode, _apiKey) : await _apiService.GetWeatherInfoByCityName(cityName, _apiKey);
 
+
+            apiResponseDto = _mapper.Map<ApiResult<WeatherInfoRoot>>(apiResponse);
+
+
             if ((int)apiResponse.StatusCode == 200)
-            {
-                weatherInfoDTO = _mapper.Map<WeatherInfoDto>(apiResponse.Content);
+            {                /*                var apiResult = new ApiResult<WeatherInfoDto>()
+                                {
+                                    StatusCode = api
+                                }*/
 
                 var currentDateTime = GetDateTimeFromEpoch(
                         apiResponse.Content.Sys.Sunrise,
@@ -51,16 +57,16 @@ namespace WeatherApp.BLL.Services
                         apiResponse.Content.Timezone
                     );
 
-                weatherInfoDTO.CityDate = currentDateTime.Item1;
-                weatherInfoDTO.CityTime = currentDateTime.Item2;
-                weatherInfoDTO.IsDayTime = currentDateTime.Item3;
+                apiResponseDto.CityDate = currentDateTime.Item1;
+                apiResponseDto.CityTime = currentDateTime.Item2;
+                apiResponseDto.IsDayTime = currentDateTime.Item3;
 
                 //capitalize each word in the city name
                 cityName = CapitalizeCityName(cityName);
-                weatherInfoDTO.CityName = cityName;
+                apiResponseDto.CityName = cityName;
             }
 
-            return null;
+            return apiResponseDto;
         }
 
         private string CapitalizeCityName(string cityName)
