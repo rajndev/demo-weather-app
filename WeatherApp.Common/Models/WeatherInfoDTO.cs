@@ -9,8 +9,6 @@
         public string WeatherCondition { get; set; }
         public string Icon { get; set; }
         public int Temperature { get; set; }
-        public bool isStatusOK { get; set; }
-        public bool isStatusNotFound { get; set; }
-        public bool isStatusOther { get; set; }
+        public int StatusCode { get; set; }
     }
 }

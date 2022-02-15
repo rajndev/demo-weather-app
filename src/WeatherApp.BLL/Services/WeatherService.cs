@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Refit;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -18,74 +17,48 @@ namespace WeatherApp.BLL.Services
     {
         private readonly IMapper _mapper;
         private readonly ApplicationDbContext _context;
-
-        private readonly IConfiguration _config;
-        private readonly string _apiKey;
         private readonly IOpenWeatherAppApiService _apiService;
+        private readonly string _apiKey;
 
-        public WeatherService(IMapper mapper, ApplicationDbContext context, IConfiguration config)
+        public WeatherService(IMapper mapper, ApplicationDbContext context, IConfiguration config, IOpenWeatherAppApiService apiService)
         {
             _mapper = mapper;
             _context = context;
-            _config = config;
-            _apiKey = _config.GetValue<string>("OpenWeatherMap:APIKey");
-            _apiService = RestService.For<IOpenWeatherAppApiService>("http://api.openweathermap.org/data/2.5");
+            _apiService = apiService;
+            _apiKey = config.GetValue<string>("OpenWeatherMapApiOptions:APIKey");
         }
 
         public async Task<WeatherInfoDto> GetCurrentWeather(string cityName)
         {
-            //int? cityCode = null;
-            //WeatherInfoDto weatherInfoDTO = new WeatherInfoDto();
-            //ApiResponse<WeatherInfoRoot> apiResponse;
+            int? cityCode = null;
+            WeatherInfoDto weatherInfoDTO = new WeatherInfoDto();
+            //ApiResult<WeatherInfoRoot> apiResponse;
 
-            //var split = cityName.Split(",");
+            var split = cityName.Split(",");
 
-            //if (split.Length == 3)
-            //{
-            //    cityCode = await GetCityCode(split, 3);
-            //}
-            //else if (split.Length == 2)
-            //{
-            //    cityCode = await GetCityCode(split, 2);
-            //}
+            cityCode = await GetCityCodeAsync(split, split.Length);
 
-            //if (cityCode != null)
-            //{
-            //    apiResponse = await _apiService.GetWeatherInfoByCityCode(cityCode, _apiKey);
-            //}
-            //else
-            //{
-            //    apiResponse = await _apiService.GetWeatherInfoByCityName(cityName, _apiKey);
-            //}
+           var apiResponse = cityCode != null ? await _apiService.GetWeatherInfoByCityCode(cityCode, _apiKey) : await _apiService.GetWeatherInfoByCityName(cityName, _apiKey);
 
-            //if ((int)apiResponse.StatusCode == 200)
-            //{
-            //    weatherInfoDTO = _mapper.Map<WeatherInfoDto>(apiResponse.Content);
+            if ((int)apiResponse.StatusCode == 200)
+            {
+                weatherInfoDTO = _mapper.Map<WeatherInfoDto>(apiResponse.Content);
 
-            //    var currentDateTime = GetDateTimeFromEpoch(
-            //        apiResponse.Content.Sys.Sunrise,
-            //        apiResponse.Content.Sys.Sunset,
-            //        apiResponse.Content.Dt,
-            //        apiResponse.Content.Timezone
-            //        );
+                var currentDateTime = GetDateTimeFromEpoch(
+                        apiResponse.Content.Sys.Sunrise,
+                        apiResponse.Content.Sys.Sunset,
+                        apiResponse.Content.Dt,
+                        apiResponse.Content.Timezone
+                    );
 
-            //    weatherInfoDTO.CityDate = currentDateTime.Item1;
-            //    weatherInfoDTO.CityTime = currentDateTime.Item2;
-            //    weatherInfoDTO.IsDayTime = currentDateTime.Item3;
-            //    weatherInfoDTO.isStatusOK = true;
+                weatherInfoDTO.CityDate = currentDateTime.Item1;
+                weatherInfoDTO.CityTime = currentDateTime.Item2;
+                weatherInfoDTO.IsDayTime = currentDateTime.Item3;
 
-            //    //capitalize each word in the city name
-            //    cityName = CapitalizeCityName(cityName);
-            //    weatherInfoDTO.CityName = cityName;
-            //}
-            //else if ((int)apiResponse.StatusCode == 404)
-            //{
-            //    weatherInfoDTO.isStatusNotFound = true;
-            //}
-            //else
-            //{
-            //    weatherInfoDTO.isStatusOther = true;
-            //}
+                //capitalize each word in the city name
+                cityName = CapitalizeCityName(cityName);
+                weatherInfoDTO.CityName = cityName;
+            }
 
             return null;
         }
@@ -109,7 +82,7 @@ namespace WeatherApp.BLL.Services
             return Tuple.Create(humanReadableDate, humanReadableTime, isDaytime);
         }
 
-        public async Task<int?> GetCityCode(string[] split, int length)
+        public async Task<int?> GetCityCodeAsync(string[] split, int length)
         {
             City cityRecord = null;
 
