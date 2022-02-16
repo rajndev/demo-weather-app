@@ -1,14 +1,10 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using WeatherApp.DAL.Entities;
-using WeatherApp.DAL.Interfaces;
+using WeatherApp.Data.Provider.Entities;
+using WeatherApp.Data.Provider.Interfaces;
 
-namespace WeatherApp.DAL.Data
+namespace WeatherApp.Data.Provider.DataContext
 {
     public class DbInitializer : IDbInitializer
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WeatherApp.DAL.Entities;
+using WeatherApp.Data.Provider.Entities;
 
-namespace WeatherApp.DAL.Data
+namespace WeatherApp.Data.Provider.DataContext
 {
     public class ApplicationDbContext : DbContext
     {

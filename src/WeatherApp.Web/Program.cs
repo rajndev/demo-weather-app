@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using WeatherApp.DAL.Interfaces;
 
-namespace WeatherApp
+namespace WeatherApp.Web
 {
     public class Program
     {

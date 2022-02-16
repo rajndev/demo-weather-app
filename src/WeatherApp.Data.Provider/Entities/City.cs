@@ -1,4 +1,4 @@
-﻿namespace WeatherApp.DAL.Entities
+﻿namespace WeatherApp.Data.Provider.Entities
 {
     public class City
     {
