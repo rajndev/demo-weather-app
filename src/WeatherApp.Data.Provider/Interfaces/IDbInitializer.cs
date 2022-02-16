@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace WeatherApp.DAL.Interfaces
+﻿namespace WeatherApp.Data.Provider.Interfaces
 {
     public interface IDbInitializer
     {

@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using WeatherApp.DAL.Data;
-using WeatherApp.DAL.Interfaces;
+using WeatherApp.Data.Provider.DataContext;
+using WeatherApp.Data.Provider.Interfaces;
 
-namespace WeatherApp.DAL.DependencyInjection
+namespace WeatherApp.Data.Provider.DependencyInjection
 {
-    public static class AddDALServiceCollections
+    public static class AddDataProviderServiceCollections
     {
-        public static IServiceCollection AddDALDependencies(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddDataProviderDependencies(this IServiceCollection services, IConfiguration config)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                             options.UseSqlServer(

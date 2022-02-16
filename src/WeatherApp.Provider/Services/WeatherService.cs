@@ -2,18 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using Refit;
-using System;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using WeatherApp.ApiClient.Interfaces;
-using WeatherApp.BLL.Interfaces;
 using WeatherApp.Common.Models;
-using WeatherApp.DAL.Data;
-using WeatherApp.DAL.Entities;
+using WeatherApp.Data.Provider.DataContext;
+using WeatherApp.Data.Provider.Entities;
+using WeatherApp.Provider.Interfaces;
 
-namespace WeatherApp.BLL.Services
+namespace WeatherApp.Provider.Services
 {
     public class WeatherService : IWeatherService
     {
@@ -64,13 +60,13 @@ namespace WeatherApp.BLL.Services
                         apiResponse.Content.Timezone
                     );
 
-                weatherResult.CityDate = currentDateTime.Item1;
+              /*  weatherResult.CityDate = currentDateTime.Item1;
                 weatherResult.CityTime = currentDateTime.Item2;
-                weatherResult.IsDayTime = currentDateTime.Item3;
+                weatherResult.IsDayTime = currentDateTime.Item3;*/
 
                 //capitalize each word in the city name
-                cityName = CapitalizeCityName(cityName);
-                weatherResult.CityName = cityName;
+               /* cityName = CapitalizeCityName(cityName);
+                weatherResult.CityName = cityName;*/
             }
 
             return weatherResult;

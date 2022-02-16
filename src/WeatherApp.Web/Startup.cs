@@ -5,12 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WeatherApp.ApiClient.DependencyInjection;
-using WeatherApp.BLL.DependencyInjection;
-using WeatherApp.DAL.DependencyInjection;
-
+using WeatherApp.Data.Provider.DependencyInjection;
+using WeatherApp.Provider.DependencyInjection;
 using WeatherApp.Web.DependencyInjection;
 
-namespace WeatherApp
+namespace WeatherApp.Web
 {
     public class Startup
     {
@@ -25,8 +24,8 @@ namespace WeatherApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllerDependencies();
-            services.AddDALDependencies(Configuration);
-            services.AddBLLDependencies();
+            services.AddDataProviderDependencies(Configuration);
+            services.AddProviderDependencies();
             services.AddApiClientDependencies(Configuration);
         }
 

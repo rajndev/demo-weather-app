@@ -5,13 +5,13 @@ using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using WeatherApp.BLL.Interfaces;
 using WeatherApp.Common.Models;
-using WeatherApp.DAL.Data;
+using WeatherApp.Data.Provider.DataContext;
+using WeatherApp.Provider.Interfaces;
 using WeatherApp.Web.HelperClasses;
 using WeatherApp.Web.ViewModels;
 
-namespace WeatherApp.Controllers
+namespace WeatherApp.Web.Controllers
 {
     public class WeatherController : Controller
     {
@@ -38,7 +38,7 @@ namespace WeatherApp.Controllers
             {
                 WeatherResult<WeatherData> apiResponseDto;
 
-                if (String.IsNullOrWhiteSpace(cityName))
+                if (string.IsNullOrWhiteSpace(cityName))
                 {
                     TempData["isCityNameEmpty"] = true;
                 }
