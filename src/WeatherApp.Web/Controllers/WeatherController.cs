@@ -36,7 +36,7 @@ namespace WeatherApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                ApiResult<WeatherInfoRoot> apiResponseDto;
+                WeatherResult<WeatherData> apiResponseDto;
 
                 if (String.IsNullOrWhiteSpace(cityName))
                 {
@@ -68,7 +68,7 @@ namespace WeatherApp.Controllers
             TempData.Keep("Weather_Info");
             var storedResults = TempData["Weather_Info"].ToString();
 
-            var apiResponseDto = JsonConvert.DeserializeObject<ApiResult<WeatherInfoRoot>>(storedResults);
+            var apiResponseDto = JsonConvert.DeserializeObject<WeatherResult<WeatherData>>(storedResults);
 
             if ((int)apiResponseDto.StatusCode == (int)StatusCodes.NotFound)
             {

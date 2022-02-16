@@ -1,6 +1,6 @@
 ﻿namespace WeatherApp.Common.Models
 {
-    public class WeatherInfoRoot
+    public class WeatherData
     {
         public Coord Coord { get; set; }
         public List<Weather> Weather { get; set; }

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
 using WeatherApp.ApiClient.Interfaces;
+using WeatherApp.Common.Models;
 
 namespace WeatherApp.ApiClient.DependencyInjection
 {
@@ -9,7 +10,8 @@ namespace WeatherApp.ApiClient.DependencyInjection
     {
         public static IServiceCollection AddApiClientDependencies(this IServiceCollection services, IConfiguration config)
         {
-            var apiKey = config.GetSection("OpenWeatherMapApiOptions:ApiKey").Value;
+            services.Configure<OpenWeatherMapApiOptions>(opt => config.GetSection("OpenWeatherMapApiOptions"));
+
             var apiHost = config.GetSection("OpenWeatherMapApiOptions:ApiHost").Value;
 
             services.AddRefitClient<IOpenWeatherAppApiService>()

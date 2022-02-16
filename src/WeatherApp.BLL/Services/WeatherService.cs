@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Refit;
 using System;
 using System.Globalization;
@@ -19,37 +20,43 @@ namespace WeatherApp.BLL.Services
         private readonly IMapper _mapper;
         private readonly ApplicationDbContext _context;
         private readonly IOpenWeatherAppApiService _apiService;
-        private readonly string _apiKey;
+        private readonly OpenWeatherMapApiOptions _options;
 
-        public WeatherService(IMapper mapper, ApplicationDbContext context, IConfiguration config, IOpenWeatherAppApiService apiService)
+        public WeatherService(
+                IMapper mapper, 
+                ApplicationDbContext context, 
+                IConfiguration config, 
+                IOpenWeatherAppApiService apiService, 
+                IOptions<OpenWeatherMapApiOptions> options
+            )
         {
-            _mapper = mapper;
+            _ = options ?? throw new NullReferenceException(nameof(options));
+            _ = context ?? throw new ArgumentNullException(nameof(context));
+            _ = apiService ?? throw new ArgumentNullException(nameof(apiService));
+            _ = mapper ?? throw new ArgumentNullException(nameof(mapper));
+
+            _options = options.Value;
             _context = context;
             _apiService = apiService;
-            _apiKey = config.GetValue<string>("OpenWeatherMapApiOptions:APIKey");
+            _mapper = mapper;
         }
 
-        public async Task<ApiResult<WeatherInfoRoot>> GetCurrentWeather(string cityName)
+        public async Task<WeatherResult<WeatherData>> GetCurrentWeather(string cityName)
         {
             int? cityCode = null;
-            var apiResponseDto = new ApiResult<WeatherInfoRoot>();
 
             var split = cityName.Split(",");
 
             cityCode = await GetCityCodeAsync(split, split.Length);
 
-            var apiResponse = cityCode != null ? await _apiService.GetWeatherInfoByCityCode(cityCode, _apiKey) : await _apiService.GetWeatherInfoByCityName(cityName, _apiKey);
+            var apiResponse = cityCode != null ? 
+                await _apiService.GetWeatherInfoByCityCode(cityCode, _options.ApiKey) :
+                await _apiService.GetWeatherInfoByCityName(cityName, _options.ApiKey);
 
-
-            apiResponseDto = _mapper.Map<ApiResult<WeatherInfoRoot>>(apiResponse);
-
+            var weatherResult = _mapper.Map<WeatherResult<WeatherData>>(apiResponse);
 
             if ((int)apiResponse.StatusCode == 200)
-            {                /*                var apiResult = new ApiResult<WeatherInfoDto>()
-                                {
-                                    StatusCode = api
-                                }*/
-
+            {
                 var currentDateTime = GetDateTimeFromEpoch(
                         apiResponse.Content.Sys.Sunrise,
                         apiResponse.Content.Sys.Sunset,
@@ -57,16 +64,16 @@ namespace WeatherApp.BLL.Services
                         apiResponse.Content.Timezone
                     );
 
-                apiResponseDto.CityDate = currentDateTime.Item1;
-                apiResponseDto.CityTime = currentDateTime.Item2;
-                apiResponseDto.IsDayTime = currentDateTime.Item3;
+                weatherResult.CityDate = currentDateTime.Item1;
+                weatherResult.CityTime = currentDateTime.Item2;
+                weatherResult.IsDayTime = currentDateTime.Item3;
 
                 //capitalize each word in the city name
                 cityName = CapitalizeCityName(cityName);
-                apiResponseDto.CityName = cityName;
+                weatherResult.CityName = cityName;
             }
 
-            return apiResponseDto;
+            return weatherResult;
         }
 
         private string CapitalizeCityName(string cityName)

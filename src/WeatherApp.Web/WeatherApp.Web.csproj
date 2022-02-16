@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="HelperClasses\AutoMappingProfile.cs" />
+    <Content Include="AutoMapper\AutoMapperProfile.cs" />
   </ItemGroup>
 
   <ItemGroup>

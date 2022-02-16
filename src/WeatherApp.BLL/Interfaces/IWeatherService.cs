@@ -5,6 +5,6 @@ namespace WeatherApp.BLL.Interfaces
 {
     public interface IWeatherService
     {
-        Task<ApiResult<WeatherInfoRoot>> GetCurrentWeather(string cityName);
+        Task<WeatherResult<WeatherData>> GetCurrentWeather(string cityName);
     }
 }
