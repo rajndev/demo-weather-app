@@ -2,7 +2,9 @@
 {
     public enum StatusCodes
     {
-        ServiceUnavailable = 401,
-        NotFound = 404
+        BadRequest = 400,
+        Unauthorized = 401,
+        NotFound = 404,
+        Conflict = 409
     }
 }

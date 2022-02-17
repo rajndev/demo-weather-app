@@ -11,9 +11,9 @@ namespace WeatherApp.Web.AutoMapper
         {
             CreateMap<ProviderResult<WeatherData>, ApiResponse<WeatherData>>().ReverseMap();
             CreateMap<CurrentWeatherViewModel, ProviderResult<WeatherData>>().ReverseMap()
-                 .ForMember(destProp => destProp.WeatherCondition, act => act.MapFrom(srcProp => srcProp.Content.Weather[0].Description))
-                 .ForMember(destProp => destProp.Icon, act => act.MapFrom(srcProp => srcProp.Content.Weather[0].Icon))
-                 .ForMember(destProp => destProp.Temperature, act => act.MapFrom(srcProp => srcProp.Content.Main.Temp))
+                 .ForMember(destProp => destProp.WeatherCondition, act => act.MapFrom(srcProp => srcProp.Content.Current.Weather[0].Description))
+                 .ForMember(destProp => destProp.Icon, act => act.MapFrom(srcProp => srcProp.Content.Current.Weather[0].Icon))
+                 .ForMember(destProp => destProp.Temperature, act => act.MapFrom(srcProp => srcProp.Content.Current.Temp))
                  .ForMember(destProp => destProp.CityName, act => act.MapFrom(srcProp => srcProp.Content.CityName))
                  .ForMember(destProp => destProp.CityDate, act => act.MapFrom(srcProp => srcProp.Content.CityDate))
                  .ForMember(destProp => destProp.CityTime, act => act.MapFrom(srcProp => srcProp.Content.CityTime))
