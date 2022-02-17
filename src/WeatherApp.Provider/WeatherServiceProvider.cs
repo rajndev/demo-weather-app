@@ -58,7 +58,7 @@ namespace WeatherApp.Provider
                 providerResult.Content.CityDate = zoneDateTime.Item1;
                 providerResult.Content.CityTime = zoneDateTime.Item2;
                 providerResult.Content.IsDayTime = zoneDateTime.Item3;
-                
+
                 cityName = CapitalizeCityName(cityName);
                 providerResult.Content.CityName = cityName;
             }
@@ -94,10 +94,10 @@ namespace WeatherApp.Provider
             var dtzi = DateTimeZoneProviders.Tzdb;
             var timeZoneToken = dtzi[timeZone];
 
-            var seattleNow = new ZonedDateTime(now, timeZoneToken);
+            var zoneDateTime = new ZonedDateTime(now, timeZoneToken);
 
-            var displayDate = seattleNow.LocalDateTime.ToDateTimeUnspecified().ToString("D");
-            var displayTime = seattleNow.LocalDateTime.ToDateTimeUnspecified().ToShortTimeString();
+            var displayDate = zoneDateTime.LocalDateTime.ToDateTimeUnspecified().ToString("D");
+            var displayTime = zoneDateTime.LocalDateTime.ToDateTimeUnspecified().ToShortTimeString();
 
             bool isDaytime = currentTime > sunrise && currentTime < sunset;
 
