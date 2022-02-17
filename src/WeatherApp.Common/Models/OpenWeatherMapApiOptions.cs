@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WeatherApp.Common.Models
+﻿namespace WeatherApp.Common.Models
 {
     public class OpenWeatherMapApiOptions
     {
+        public const string Position = "OpenWeatherMapApiOptions";
         public string ApiKey { get; set; } = string.Empty;
         public string ApiHost { get; set; } = string.Empty;
     }

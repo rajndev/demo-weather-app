@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using WeatherApp.HelperClasses;
+using WeatherApp.Web.AutoMapper;
 
 namespace WeatherApp.Web.DependencyInjection
 {
@@ -9,7 +9,7 @@ namespace WeatherApp.Web.DependencyInjection
         {
             services.AddControllersWithViews();
             services.AddRazorPages();
-            services.AddAutoMapper(c => c.AddProfile<AutoMappingProfile>(), typeof(Startup));
+            services.AddAutoMapper(c => c.AddProfile<AutoMapperProfile>(), typeof(Startup));
             return services;
         }
     }

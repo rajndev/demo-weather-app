@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
-using WeatherApp.DAL.Interfaces;
+using WeatherApp.Data.Provider.Interfaces;
 
 namespace WeatherApp.Web
 {

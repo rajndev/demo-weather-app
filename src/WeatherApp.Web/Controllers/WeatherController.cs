@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using WeatherApp.Common.Models;
@@ -36,7 +35,7 @@ namespace WeatherApp.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                WeatherResult<WeatherData> apiResponseDto;
+                ProviderResult<WeatherData> apiResponseDto;
 
                 if (string.IsNullOrWhiteSpace(cityName))
                 {
@@ -56,29 +55,29 @@ namespace WeatherApp.Web.Controllers
 
         [HttpGet]
         public IActionResult ShowWeatherResponse()
-        {//todo: test to see if empty city name throws proper error message
-            /*TempData["isCityNameEmpty"] != null && */
+        {
+            CurrentWeatherViewModel errorViewModel = new();
 
             if (TempData["isCityNameEmpty"] != null && (bool)TempData["isCityNameEmpty"])
             {
-                ViewData["TextResponse"] = "Invalid city name";
-                return View();
+                errorViewModel.ViewErrorToken = "Invalid city name";
+                return View(errorViewModel);
             }
 
             TempData.Keep("Weather_Info");
             var storedResults = TempData["Weather_Info"].ToString();
 
-            var apiResponseDto = JsonConvert.DeserializeObject<WeatherResult<WeatherData>>(storedResults);
+            var apiResponseDto = JsonConvert.DeserializeObject<ProviderResult<WeatherData>>(storedResults);
 
-            if ((int)apiResponseDto.StatusCode == (int)StatusCodes.NotFound)
+            if (apiResponseDto.StatusCode == (int)StatusCodes.NotFound)
             {
-                ViewData["TextResponse"] = "Invalid city name";
-                return View();
+                errorViewModel.ViewErrorToken = "Invalid city name";
+                return View(errorViewModel);
             }
-            else if ((int)apiResponseDto.StatusCode == (int)StatusCodes.ServiceUnavailable)
+            else if (apiResponseDto.StatusCode == (int)StatusCodes.ServiceUnavailable)
             {
-                ViewData["TextResponse"] = "API service unavailable";
-                return View();
+                errorViewModel.ViewErrorToken = "API service unavailable";
+                return View(errorViewModel);
             }
             else
             {
