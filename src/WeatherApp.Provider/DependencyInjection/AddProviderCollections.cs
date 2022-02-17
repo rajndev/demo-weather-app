@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using WeatherApp.Provider.Interfaces;
-using WeatherApp.Provider.Services;
 
 namespace WeatherApp.Provider.DependencyInjection
 {
@@ -8,7 +7,7 @@ namespace WeatherApp.Provider.DependencyInjection
     {
         public static IServiceCollection AddProviderDependencies(this IServiceCollection services)
         {
-            services.AddSingleton<IWeatherService, WeatherService>();
+            services.AddSingleton<IWeatherService, WeatherServiceProvider>();
 
             return services;
         }

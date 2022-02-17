@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WeatherApp.DAL.Data;
+using WeatherApp.Data.Provider.DataContext;
 
 namespace WeatherApp.DAL.Data.Migrations
 {

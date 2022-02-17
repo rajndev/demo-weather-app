@@ -15,5 +15,9 @@
         public int Id { get; set; }
         public string Name { get; set; }
         public int Cod { get; set; }
+        public string CityName { get; set; }
+        public string CityDate { get; set; }
+        public string CityTime { get; set; }
+        public bool IsDayTime { get; set; }
     }
 }

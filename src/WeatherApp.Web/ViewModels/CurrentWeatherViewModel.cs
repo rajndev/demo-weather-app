@@ -9,5 +9,6 @@
         public string WeatherCondition { get; set; }
         public string Icon { get; set; }
         public int Temperature { get; set; }
+        public string ViewErrorToken { get; set; }
     }
 }
