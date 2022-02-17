@@ -4,7 +4,13 @@
     ViewData["Title"] = "CurrentWeather";
 }
 
-
+@if (Model.ViewErrorToken == "Not found")
+{
+    <div class="text-center" style="margin-top: 80px;">
+        <h1 class="display-4">Weather information could not be found for this city name. Please try again.</h1>
+        <img src="~/images/sunshine.jpg" alt="Sunshine" width="350" style="margin-top: 80px;" />
+    </div>
+}
 @if (Model.ViewErrorToken == "Invalid city name")
 {
     <div class="text-center" style="margin-top: 80px;">
@@ -12,10 +18,17 @@
         <img src="~/images/sunshine.jpg" alt="Sunshine" width="350" style="margin-top: 80px;" />
     </div>
 }
-else if (Model.ViewErrorToken == "API service unavailable")
+else if (Model.ViewErrorToken == "Api limit reached")
 {
     <div class="text-center" style="margin-top: 80px;">
         <h1 class="display-4">The application has reached the maximum weather API request limit. <br /><br />Please try again later.</h1>
+        <img src="~/images/sunshine.jpg" alt="Sunshine" width="350" style="margin-top: 80px;" />
+    </div>
+}
+else if (Model.ViewErrorToken == "Api service problem")
+{
+    <div class="text-center" style="margin-top: 80px;">
+        <h1 class="display-4">There was a problem with your request. <br /><br />Please try again later.</h1>
         <img src="~/images/sunshine.jpg" alt="Sunshine" width="350" style="margin-top: 80px;" />
     </div>
 }
