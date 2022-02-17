@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="HelperClasses\AutoMappingProfile.cs" />
+    <Content Include="AutoMapper\AutoMapperProfile.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,8 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WeatherApp.BLL\WeatherApp.BLL.csproj" />
-    <ProjectReference Include="..\WeatherApp.DAL\WeatherApp.DAL.csproj" />
+    <ProjectReference Include="..\WeatherApp.Common\WeatherApp.Common.csproj" />
+    <ProjectReference Include="..\WeatherApp.Data.Provider\WeatherApp.Data.Provider.csproj" />
+    <ProjectReference Include="..\WeatherApp.Provider\WeatherApp.Provider.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WeatherApp.BLL.DependencyInjection;
-using WeatherApp.DAL.DependencyInjection;
-
+using WeatherApp.ApiClient.DependencyInjection;
+using WeatherApp.Common.Models;
+using WeatherApp.Data.Provider.DependencyInjection;
+using WeatherApp.Provider.DependencyInjection;
 using WeatherApp.Web.DependencyInjection;
 
-namespace WeatherApp
+namespace WeatherApp.Web
 {
     public class Startup
     {
@@ -24,8 +25,9 @@ namespace WeatherApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllerDependencies();
-            services.AddDALDependencies(Configuration);
-            services.AddBLLDependencies();
+            services.AddDataProviderDependencies(Configuration);
+            services.AddProviderDependencies();
+            services.AddApiClientDependencies(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,7 +44,7 @@ namespace WeatherApp
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Weather/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -57,7 +59,7 @@ namespace WeatherApp
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Weather}/{action=Index}/{id?}");
             });
         }
     }

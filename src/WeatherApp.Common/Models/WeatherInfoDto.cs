@@ -1,6 +1,6 @@
-﻿namespace WeatherApp.Web.ViewModels
+﻿namespace WeatherApp.Common.Models
 {
-    public class CurrentWeatherViewModel
+    public class WeatherInfoDto
     {
         public string CityName { get; set; }
         public string CityDate { get; set; }
@@ -9,6 +9,6 @@
         public string WeatherCondition { get; set; }
         public string Icon { get; set; }
         public int Temperature { get; set; }
-        public string ViewErrorToken { get; set; }
+        public int StatusCode { get; set; }
     }
 }

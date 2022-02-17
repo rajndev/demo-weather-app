@@ -2,7 +2,7 @@
     $("#searchterm").autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: '/Home/GetAutocompleteList',
+                url: '/Weather/GetAutocompleteList',
                 data: { "cityname": request.term },
                 type: "POST",
                 success: function (data) {
@@ -45,7 +45,7 @@
     }).data("ui-autocomplete")._renderItem = function (ul, item) {
 
         if (item.state == "") {
-            var listItem = "<a>" + item.name + ", " + item.country + "</a>";
+            var listItem = `<a>${item.name}, ${item.country}</a>`;
         }
         else {
             var listItem = "<a>" + item.name + ", " + item.state + ", " + item.country + "</a>";
