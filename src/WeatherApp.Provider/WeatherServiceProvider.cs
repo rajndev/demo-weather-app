@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GoogleMaps.LocationServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -39,11 +40,11 @@ namespace WeatherApp.Provider
 
         public async Task<ProviderResult<WeatherData>> GetCurrentWeather(string cityName)
         {
-            int? cityCode = null;
+            var fdsa = GetCityCoordinates(cityName);
 
             var split = cityName.Split(",");
 
-            cityCode = await GetCityCodeAsync(split, split.Length);
+            int? cityCode = await GetCityCodeAsync(split, split.Length);
 
             var apiResponse = cityCode != null ?
                 await _apiService.GetWeatherInfoByCityCode(cityCode, _options.ApiKey) :
@@ -70,6 +71,19 @@ namespace WeatherApp.Provider
             }
 
             return providerResult;
+        }
+
+        public Tuple<string, string> GetCityCoordinates(string cityName)
+        {
+            // var address = cityName;
+
+            var locationService = new GoogleLocationService("");
+            var point = locationService.GetLatLongFromAddress("Pittsburgh, PA");
+
+            var latitude = point.Latitude.ToString();
+            var longitude = point.Longitude.ToString();
+
+            return Tuple.Create(latitude, longitude);
         }
 
         private string CapitalizeCityName(string cityName)
