@@ -3,7 +3,6 @@
     public interface IDbInitializer
     {
         void Initialize();
-
         Task SeedData();
     }
 }

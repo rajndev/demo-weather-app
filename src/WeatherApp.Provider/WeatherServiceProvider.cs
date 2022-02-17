@@ -58,7 +58,7 @@ namespace WeatherApp.Provider
                 providerResult.Content.CityDate = zoneDateTime.Item1;
                 providerResult.Content.CityTime = zoneDateTime.Item2;
                 providerResult.Content.IsDayTime = zoneDateTime.Item3;
-
+                
                 cityName = CapitalizeCityName(cityName);
                 providerResult.Content.CityName = cityName;
             }
