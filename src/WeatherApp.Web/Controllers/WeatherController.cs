@@ -71,12 +71,22 @@ namespace WeatherApp.Web.Controllers
 
             if (apiResponseDto.StatusCode == (int)StatusCodes.NotFound)
             {
+                errorViewModel.ViewErrorToken = "Not found";
+                return View(errorViewModel);
+            }
+            else if (apiResponseDto.StatusCode == (int)StatusCodes.BadRequest)
+            {
                 errorViewModel.ViewErrorToken = "Invalid city name";
                 return View(errorViewModel);
             }
-            else if (apiResponseDto.StatusCode == (int)StatusCodes.ServiceUnavailable)
+            else if (apiResponseDto.StatusCode == (int)StatusCodes.Conflict)
             {
-                errorViewModel.ViewErrorToken = "API service unavailable";
+                errorViewModel.ViewErrorToken = "Api limit reached";
+                return View(errorViewModel);
+            }
+            else if (apiResponseDto.StatusCode == (int)StatusCodes.Unauthorized)
+            {
+                errorViewModel.ViewErrorToken = "Api service problem";
                 return View(errorViewModel);
             }
             else
