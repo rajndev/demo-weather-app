@@ -17,14 +17,14 @@ namespace WeatherApp.Provider
         private readonly IMapper _mapper;
         private readonly ApplicationDbContext _context;
         private readonly IOpenWeatherAppApiService _apiService;
-        private readonly OpenWeatherMapApiOptions _options;
+        private readonly ApiOptions _options;
 
         public WeatherServiceProvider(
                 IMapper mapper,
                 ApplicationDbContext context,
                 IConfiguration config,
                 IOpenWeatherAppApiService apiService,
-                IOptions<OpenWeatherMapApiOptions> options
+                IOptions<ApiOptions> options
             )
         {
             _ = options ?? throw new NullReferenceException(nameof(options));
@@ -47,8 +47,8 @@ namespace WeatherApp.Provider
             int? cityCode = await GetCityCodeAsync(split, split.Length);
 
             var apiResponse = cityCode != null ?
-                await _apiService.GetWeatherInfoByCityCode(cityCode, _options.ApiKey) :
-                await _apiService.GetWeatherInfoByCityName(cityName, _options.ApiKey);
+                await _apiService.GetWeatherInfoByCityCode(cityCode, _options.OpenWeatherMapApiKey) :
+                await _apiService.GetWeatherInfoByCityName(cityName, _options.OpenWeatherMapApiKey);
 
             var providerResult = _mapper.Map<ProviderResult<WeatherData>>(apiResponse);
 
@@ -77,7 +77,7 @@ namespace WeatherApp.Provider
         {
             // var address = cityName;
 
-            var locationService = new GoogleLocationService("");
+            var locationService = new GoogleLocationService(_options.GoogleApiKey);
             var point = locationService.GetLatLongFromAddress("Pittsburgh, PA");
 
             var latitude = point.Latitude.ToString();
