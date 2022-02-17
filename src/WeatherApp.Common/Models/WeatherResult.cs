@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WeatherApp.Common.Models
 {
-    public class WeatherResult<T>
+    public class ProviderResult<T>
     {
         public int StatusCode { get; set; }
         public T? Content { get; set; }

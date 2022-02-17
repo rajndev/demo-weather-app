@@ -9,20 +9,20 @@ using WeatherApp.Data.Provider.DataContext;
 using WeatherApp.Data.Provider.Entities;
 using WeatherApp.Provider.Interfaces;
 
-namespace WeatherApp.Provider.Services
+namespace WeatherApp.Provider
 {
-    public class WeatherService : IWeatherService
+    public class WeatherServiceProvider : IWeatherService
     {
         private readonly IMapper _mapper;
         private readonly ApplicationDbContext _context;
         private readonly IOpenWeatherAppApiService _apiService;
         private readonly OpenWeatherMapApiOptions _options;
 
-        public WeatherService(
-                IMapper mapper, 
-                ApplicationDbContext context, 
-                IConfiguration config, 
-                IOpenWeatherAppApiService apiService, 
+        public WeatherServiceProvider(
+                IMapper mapper,
+                ApplicationDbContext context,
+                IConfiguration config,
+                IOpenWeatherAppApiService apiService,
                 IOptions<OpenWeatherMapApiOptions> options
             )
         {
@@ -37,7 +37,7 @@ namespace WeatherApp.Provider.Services
             _mapper = mapper;
         }
 
-        public async Task<WeatherResult<WeatherData>> GetCurrentWeather(string cityName)
+        public async Task<ProviderResult<WeatherData>> GetCurrentWeather(string cityName)
         {
             int? cityCode = null;
 
@@ -45,11 +45,11 @@ namespace WeatherApp.Provider.Services
 
             cityCode = await GetCityCodeAsync(split, split.Length);
 
-            var apiResponse = cityCode != null ? 
+            var apiResponse = cityCode != null ?
                 await _apiService.GetWeatherInfoByCityCode(cityCode, _options.ApiKey) :
                 await _apiService.GetWeatherInfoByCityName(cityName, _options.ApiKey);
 
-            var weatherResult = _mapper.Map<WeatherResult<WeatherData>>(apiResponse);
+            var providerResult = _mapper.Map<ProviderResult<WeatherData>>(apiResponse);
 
             if ((int)apiResponse.StatusCode == 200)
             {
@@ -60,16 +60,16 @@ namespace WeatherApp.Provider.Services
                         apiResponse.Content.Timezone
                     );
 
-              /*  weatherResult.CityDate = currentDateTime.Item1;
-                weatherResult.CityTime = currentDateTime.Item2;
-                weatherResult.IsDayTime = currentDateTime.Item3;*/
+                providerResult.Content.CityDate = currentDateTime.Item1;
+                providerResult.Content.CityTime = currentDateTime.Item2;
+                providerResult.Content.IsDayTime = currentDateTime.Item3;
 
                 //capitalize each word in the city name
-               /* cityName = CapitalizeCityName(cityName);
-                weatherResult.CityName = cityName;*/
+                cityName = CapitalizeCityName(cityName);
+                providerResult.Content.CityName = cityName;
             }
 
-            return weatherResult;
+            return providerResult;
         }
 
         private string CapitalizeCityName(string cityName)
@@ -85,10 +85,10 @@ namespace WeatherApp.Provider.Services
 
             bool isDaytime = currentTime > sunrise && currentTime < sunset;
 
-            var humanReadableDate = dateTimeOffset.DateTime.ToString("D");
-            var humanReadableTime = dateTimeOffset.DateTime.ToString("t");
+            var displayDate = dateTimeOffset.DateTime.ToString("D");
+            var displayTime = dateTimeOffset.DateTime.ToString("t");
 
-            return Tuple.Create(humanReadableDate, humanReadableTime, isDaytime);
+            return Tuple.Create(displayDate, displayTime, isDaytime);
         }
 
         public async Task<int?> GetCityCodeAsync(string[] split, int length)

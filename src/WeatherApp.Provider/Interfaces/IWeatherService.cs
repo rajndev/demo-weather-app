@@ -5,6 +5,6 @@ namespace WeatherApp.Provider.Interfaces
 {
     public interface IWeatherService
     {
-        Task<WeatherResult<WeatherData>> GetCurrentWeather(string cityName);
+        Task<ProviderResult<WeatherData>> GetCurrentWeather(string cityName);
     }
 }

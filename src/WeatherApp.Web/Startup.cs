@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WeatherApp.ApiClient.DependencyInjection;
+using WeatherApp.Common.Models;
 using WeatherApp.Data.Provider.DependencyInjection;
 using WeatherApp.Provider.DependencyInjection;
 using WeatherApp.Web.DependencyInjection;

@@ -45,7 +45,7 @@
     }).data("ui-autocomplete")._renderItem = function (ul, item) {
 
         if (item.state == "") {
-            var listItem = "<a>" + item.name + ", " + item.country + "</a>";
+            var listItem = `<a>${item.name}, ${item.country}</a>`;
         }
         else {
             var listItem = "<a>" + item.name + ", " + item.state + ", " + item.country + "</a>";
