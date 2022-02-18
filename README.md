@@ -21,7 +21,7 @@ To search for the current weather conditions for a city of interest, enter the c
 
 ## Technology Stacks and Tools Used
 
-**Frameworks, languages, and tools:** C#, ASP.NET Core MVC 3.1, HTML5, CSS, Bootstrap, Git and GitHub for Version Control, Azure DevOps for project management, and Microsoft Teams for code reviews.
+**Frameworks, languages, and tools:** C#, ASP.NET Core MVC 3.1, HTML5, CSS, Bootstrap, Git, Git Flow branching strategy, GitHub, Azure DevOps for project management, and Microsoft Teams for code reviews.
 
 **Design and architectural patterns:** IOptions pattern, DI Services segregation pattern, MVC pattern, 3-layered architecture.
 
