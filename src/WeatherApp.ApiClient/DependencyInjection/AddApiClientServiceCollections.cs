@@ -10,7 +10,7 @@ namespace WeatherApp.ApiClient.DependencyInjection
     {
         public static IServiceCollection AddApiClientDependencies(this IServiceCollection services, IConfiguration config)
         {
-            services.Configure<ApiOptions>(options => { options.GoogleApiKey = config.GetValue<string>("GoogleGeoCodingApiOptions:ApiKey"); options.OpenWeatherMapApiKey = config.GetValue<string>("OpenWeatherMapApiOptions:ApiKey"); });
+            services.Configure<ApiOptions>(options => { options.GoogleApiKey = config.GetValue<string>("ApiOptions:GoogleApiKey"); options.OpenWeatherMapApiKey = config.GetValue<string>("ApiOptions:OpenWeatherMapApiKey"); });
 
             var apiHost = config.GetSection("OpenWeatherMapApiOptions:ApiHost").Value;
 

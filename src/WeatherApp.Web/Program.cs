@@ -3,8 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using WeatherApp.Data.Provider.Interfaces;
+using WeatherApp.Web;
 
-namespace WeatherApp.Web
+namespace WeatherApp
 {
     public class Program
     {
@@ -27,7 +28,7 @@ namespace WeatherApp.Web
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>().UseUrls("http://localhost:6000/"); ;
                 });
     }
 }
