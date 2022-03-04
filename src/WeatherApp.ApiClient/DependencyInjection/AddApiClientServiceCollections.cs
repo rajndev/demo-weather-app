@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
+using System;
 using WeatherApp.ApiClient.Interfaces;
 using WeatherApp.Common.Models;
 
