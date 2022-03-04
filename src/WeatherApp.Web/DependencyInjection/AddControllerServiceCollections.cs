@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using WeatherApp.Web.AutoMapper;
 
 namespace WeatherApp.Web.DependencyInjection
