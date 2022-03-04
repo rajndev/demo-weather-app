@@ -1,4 +1,6 @@
-﻿namespace WeatherApp.Common.Models
+﻿using System.Collections.Generic;
+
+namespace WeatherApp.Common.Models
 {
     public class Current
     {
