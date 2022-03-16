@@ -56,7 +56,7 @@ namespace WeatherApp.Web.Controllers
         [HttpGet]
         public IActionResult ShowWeatherResponse()
         {
-            CurrentWeatherViewModel errorViewModel = new();
+            var errorViewModel = new CurrentWeatherViewModel();
 
             if (TempData["isCityNameEmpty"] != null && (bool)TempData["isCityNameEmpty"])
             {

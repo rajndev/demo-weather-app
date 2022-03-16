@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using WeatherApp.Data.Provider.Entities;
 using WeatherApp.Data.Provider.Interfaces;
 

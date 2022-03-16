@@ -9,7 +9,7 @@ namespace WeatherApp.Common.Models
     public class ProviderResult<T>
     {
         public int StatusCode { get; set; }
-        public T? Content { get; set; }
+        public T Content { get; set; }
         public string? Error { get; set; }
         public bool IsSuccessStatusCode { get; set; }
     }
