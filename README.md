@@ -25,10 +25,9 @@ To search for the current weather conditions for a city of interest, enter the c
 
 **Frameworks, Languages, and Tools:** C#, ASP.NET Core MVC, EF Core, jQuery, AJAX, SQL Server, SSMS, Automapper, HTML5, CSS3, Bootstrap 5, Visual Studio, Postman, Git, Git Flow branching strategy, GitHub, Azure DevOps for project management, and Microsoft Teams for code reviews
 
-**Design and Architectural Patterns:** Singleton Pattern, IOptions pattern, DI Services segregation pattern, MVC pattern, 3-layered architecture.
+**Design and Architectural Patterns:** Singleton Pattern, IOptions pattern, DI Services segregation pattern, MVC pattern, 3 layered architecture.
 
-For productivity purposes, the following Visual Studio extensions were used: Productivity Power Tools, CodeMaid, Github extension for Visual Studio 2019, Snippet Designer, and Web Essentials.
-
-These Android apps were used to facilitate effective time management: Microsoft To-Do app, Trello app, and the Pomodoro app.
+**Visual Studio extensions:** Productivity Power Tools, CodeMaid, Github extension for Visual Studio 2019, Snippet Designer, and Web Essentials.
 
 [Click here](https://weatherappraj.azurewebsites.net) for a live demo of the project.
+
