@@ -17,7 +17,8 @@ namespace WeatherApp.Web.AutoMapper
                  .ForMember(destProp => destProp.CityName, act => act.MapFrom(srcProp => srcProp.Content.CityName))
                  .ForMember(destProp => destProp.CityDate, act => act.MapFrom(srcProp => srcProp.Content.CityDate))
                  .ForMember(destProp => destProp.CityTime, act => act.MapFrom(srcProp => srcProp.Content.CityTime))
-                 .ForMember(destProp => destProp.IsDayTime, act => act.MapFrom(srcProp => srcProp.Content.IsDayTime));
+                 .ForMember(destProp => destProp.IsDayTime, act => act.MapFrom(srcProp => srcProp.Content.IsDayTime))
+                 .ForMember(destProp => destProp.Dt, act => act.MapFrom(srcProp => srcProp.Content.Daily[0].Dt));
         }
     }
 }

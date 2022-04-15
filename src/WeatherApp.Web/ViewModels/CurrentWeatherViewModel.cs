@@ -2,6 +2,7 @@
 {
     public class CurrentWeatherViewModel
     {
+        public long Dt { get; set; }
         public string CityName { get; set; }
         public string CityDate { get; set; }
         public string CityTime { get; set; }

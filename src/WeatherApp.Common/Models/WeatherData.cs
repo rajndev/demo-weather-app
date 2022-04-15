@@ -1,4 +1,6 @@
-﻿namespace WeatherApp.Common.Models
+﻿using System.Collections.Generic;
+
+namespace WeatherApp.Common.Models
 {
     public class WeatherData
     {
@@ -6,6 +8,7 @@
         public double Lon { get; set; }
         public string TimeZone { get; set; }
         public Current Current { get; set; }
+        public List<DailyDayForecat> Daily { get; set; }
         public string CityName { get; set; }
         public string CityDate { get; set; }
         public string CityTime { get; set; }
