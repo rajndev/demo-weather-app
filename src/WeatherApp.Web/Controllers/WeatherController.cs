@@ -96,6 +96,11 @@ namespace WeatherApp.Web.Controllers
             }
         }
 
+        public IActionResult GetDailyForecast()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<JsonResult> GetAutocompleteList(string cityName)
         {

@@ -1,4 +1,7 @@
-﻿namespace WeatherApp.Web.ViewModels
+﻿using System.Collections.Generic;
+using WeatherApp.Common.Models;
+
+namespace WeatherApp.Web.ViewModels
 {
     public class CurrentWeatherViewModel
     {
@@ -11,5 +14,6 @@
         public string Icon { get; set; }
         public int Temperature { get; set; }
         public string ViewErrorToken { get; set; }
+        public List<DailyDayForecat> DailyForecast { get; set; }
     }
 }
