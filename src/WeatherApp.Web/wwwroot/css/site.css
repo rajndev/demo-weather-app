@@ -112,11 +112,16 @@ body {
 }
 
 .weather-forecast-item {
-    border: 1px solid red;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid green;
+    width: 160px;
     padding: 15px;
     margin: 10px;
     border-radius: 10px;
-    background: rgba(0,0,0,0.2)
+    background-color: rgba(78, 178, 74, 0.3);
 }
 
 .weather-forecast .weather-forecast-item .day {
@@ -128,6 +133,6 @@ body {
 }
 
 .weather-forecast .weather-forecast-item .temp {
-    font-weight: 100;
+    font-weight: 500;
     font-size: 12px;
 }
