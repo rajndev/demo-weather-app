@@ -99,7 +99,7 @@ namespace WeatherApp.Web.Controllers
 
         public async Task<IActionResult> GetDailyForecast(string cityName)
         {
-            if (ModelState.IsValid)
+            if (!string.IsNullOrEmpty(cityName))
             {
                 CurrentWeatherViewModel weatherViewModel;
                 ProviderResult<WeatherData> apiResponseDto;
@@ -109,6 +109,7 @@ namespace WeatherApp.Web.Controllers
                 return View(weatherViewModel);
             }
 
+            ViewData["isCityNameEmpty"] = true;
             return View();
         }
 

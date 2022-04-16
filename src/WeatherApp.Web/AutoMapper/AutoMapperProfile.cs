@@ -15,9 +15,13 @@ namespace WeatherApp.Web.AutoMapper
                  .ForMember(destProp => destProp.Icon, act => act.MapFrom(srcProp => srcProp.Content.Current.Weather[0].Icon))
                  .ForMember(destProp => destProp.Temperature, act => act.MapFrom(srcProp => srcProp.Content.Current.Temp))
                  .ForMember(destProp => destProp.CityName, act => act.MapFrom(srcProp => srcProp.Content.CityName))
+                 .ForMember(destProp => destProp.CityDay, act => act.MapFrom(srcProp => srcProp.Content.CityDay))
+                 .ForMember(destProp => destProp.CityMonth, act => act.MapFrom(srcProp => srcProp.Content.CityMonth))
                  .ForMember(destProp => destProp.CityDate, act => act.MapFrom(srcProp => srcProp.Content.CityDate))
+                 .ForMember(destProp => destProp.CityYear, act => act.MapFrom(srcProp => srcProp.Content.CityYear))
                  .ForMember(destProp => destProp.CityTime, act => act.MapFrom(srcProp => srcProp.Content.CityTime))
                  .ForMember(destProp => destProp.IsDayTime, act => act.MapFrom(srcProp => srcProp.Content.IsDayTime))
+                 .ForMember(destProp => destProp.TimeZone, act => act.MapFrom(srcProp => srcProp.Content.TimeZone))
                  .ForMember(destProp => destProp.Daily, act => act.MapFrom(srcProp => srcProp.Content.Daily));
         }
     }
