@@ -70,31 +70,30 @@ namespace WeatherApp.Web.Controllers
 
             var apiResponseDto = JsonConvert.DeserializeObject<ProviderResult<WeatherData>>(storedResults);
 
-            if (apiResponseDto.StatusCode == (int)StatusCodes.NotFound)
+            if (apiResponseDto.StatusCode != (int)StatusCodes.Success)
             {
-                errorViewModel.ViewErrorToken = "Not found";
+                if (apiResponseDto.StatusCode == (int)StatusCodes.NotFound)
+                {
+                    errorViewModel.ViewErrorToken = "Not found";
+                }
+                else if (apiResponseDto.StatusCode == (int)StatusCodes.BadRequest)
+                {
+                    errorViewModel.ViewErrorToken = "Invalid city name";
+                }
+                else if (apiResponseDto.StatusCode == (int)StatusCodes.Conflict)
+                {
+                    errorViewModel.ViewErrorToken = "Api limit reached";
+                }
+                else if (apiResponseDto.StatusCode == (int)StatusCodes.Unauthorized)
+                {
+                    errorViewModel.ViewErrorToken = "Api service problem";
+                }
+
                 return View(errorViewModel);
             }
-            else if (apiResponseDto.StatusCode == (int)StatusCodes.BadRequest)
-            {
-                errorViewModel.ViewErrorToken = "Invalid city name";
-                return View(errorViewModel);
-            }
-            else if (apiResponseDto.StatusCode == (int)StatusCodes.Conflict)
-            {
-                errorViewModel.ViewErrorToken = "Api limit reached";
-                return View(errorViewModel);
-            }
-            else if (apiResponseDto.StatusCode == (int)StatusCodes.Unauthorized)
-            {
-                errorViewModel.ViewErrorToken = "Api service problem";
-                return View(errorViewModel);
-            }
-            else
-            {
-                var currentWeatherViewModel = _mapper.Map<CurrentWeatherViewModel>(apiResponseDto);
-                return View(currentWeatherViewModel);
-            }
+
+            var currentWeatherViewModel = _mapper.Map<CurrentWeatherViewModel>(apiResponseDto);
+            return View(currentWeatherViewModel);
         }
 
         public async Task<IActionResult> GetDailyForecast(string cityName)
@@ -105,11 +104,35 @@ namespace WeatherApp.Web.Controllers
                 ProviderResult<WeatherData> apiResponseDto;
 
                 apiResponseDto = await _weatherService.GetCurrentWeather(cityName);
-                weatherViewModel = _mapper.Map<CurrentWeatherViewModel>(apiResponseDto);
-                return View(weatherViewModel);
+
+                if (apiResponseDto.StatusCode != (int)StatusCodes.Success)
+                {
+                    if (apiResponseDto.StatusCode == (int)StatusCodes.NotFound)
+                    {
+                        ViewData["isCityNotFound"] = true;
+                    }
+                    else if (apiResponseDto.StatusCode == (int)StatusCodes.BadRequest)
+                    {
+                        ViewData["isInvalidCityName"] = true;
+                    }
+                    else if (apiResponseDto.StatusCode == (int)StatusCodes.Conflict)
+                    {
+                        ViewData["isApiLimitReached"] = true;
+                    }
+                    else if (apiResponseDto.StatusCode == (int)StatusCodes.Unauthorized)
+                    {
+                        ViewData["isApiServiceProblem"] = true;
+                    }
+                    return View();
+                }
+                else
+                {
+                    weatherViewModel = _mapper.Map<CurrentWeatherViewModel>(apiResponseDto);
+                    return View(weatherViewModel);
+                }
             }
 
-            ViewData["isCityNameEmpty"] = true;
+            ViewData["isInvalidCityName"] = true;
             return View();
         }
 
