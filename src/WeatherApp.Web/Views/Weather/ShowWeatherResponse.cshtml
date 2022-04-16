@@ -48,13 +48,13 @@ else
                 {
                     <img class="card-img-top" src="~/images/night.jpg" alt="Card image cap">
                 }
-                <div class="card-img-bottom-right"><span style="font-family: Calibri;font-weight: bold; font-size: 40px;">@Model.CityName<br /></span><span style="font-size: 20px; display: inline-block">@Model.CityDate</span></div>
+                <div class="card-img-bottom-right"><span style="font-family: Calibri;font-weight: bold; font-size: 40px;">@Model.CityName<br /></span><span style="font-size: 20px; display: inline-block">@Model.CityDay, @Model.CityMonth @Model.CityDate, @Model.CityYear</span></div>
             </div>
 
             <div class="card-body">
 
                 <p class="card-text">
-
+                    <a asp-controller="Weather" asp-action="GetDailyForecast" asp-route-cityname="@Model.CityName"><span style="float: left; color: gray; font-weight: bold; font-size: 17px"><i class="bi bi-brightness-high-fill"></i> 8 Day Forecast</span></a>
                     <span style="font-weight: bold;float: right;font-size: 17px">@Model.CityTime</span>
                     <br />
                     <br />
@@ -66,7 +66,7 @@ else
 
                     <img src="http://openweathermap.org/img/wn/@{@Model.Icon}@@2x.png" alt="" /><br />
                     <span style="font-family: Calibri; font-size: 30px; ">
-                        @Model.Temperature °F
+                        @Model.Temperature °F  
                     </span>
 
                     <br />

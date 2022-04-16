@@ -57,9 +57,12 @@ namespace WeatherApp.Provider
                     apiResponse.Content.Current.Sunrise,
                     apiResponse.Content.Current.Sunset);
 
-                providerResult.Content.CityDate = zoneDateTime.Item1;
-                providerResult.Content.CityTime = zoneDateTime.Item2;
-                providerResult.Content.IsDayTime = zoneDateTime.Item3;
+                providerResult.Content.CityDay = zoneDateTime.Item1;
+                providerResult.Content.CityMonth = zoneDateTime.Item2;
+                providerResult.Content.CityDate = zoneDateTime.Item3;
+                providerResult.Content.CityYear = zoneDateTime.Item4;
+                providerResult.Content.CityTime = zoneDateTime.Item5;
+                providerResult.Content.IsDayTime = zoneDateTime.Item6;
 
                 cityName = CapitalizeCityName(cityName);
                 providerResult.Content.CityName = cityName;
@@ -89,21 +92,25 @@ namespace WeatherApp.Provider
             return cityName;
         }
 
-        private Tuple<string, string, bool> GetZoneDateTime(string timeZone, long currentTime, long sunrise, long sunset)
+        public Tuple<string, string, string, string, string, bool> GetZoneDateTime(string timeZone, long currentTime = 0, long sunrise = 0, long sunset = 0)
         {
-            var now = SystemClock.Instance.GetCurrentInstant();
+            var instant = Instant.FromUnixTimeSeconds(currentTime);
+            //var now = SystemClock.Instance.GetCurrentInstant();
 
             var dtzi = DateTimeZoneProviders.Tzdb;
             var timeZoneToken = dtzi[timeZone];
 
-            var zoneDateTime = new ZonedDateTime(now, timeZoneToken);
+            var zoneDateTime = new ZonedDateTime(instant, timeZoneToken);
 
-            var displayDate = zoneDateTime.LocalDateTime.ToDateTimeUnspecified().ToString("D");
+            var displayDay = zoneDateTime.Date.DayOfWeek.ToString();
+            var displayMonth = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(zoneDateTime.LocalDateTime.ToDateTimeUnspecified().Month);
+            var displayDate = zoneDateTime.Date.Day.ToString();
+            var displayYear = zoneDateTime.Date.Year.ToString();
             var displayTime = zoneDateTime.LocalDateTime.ToDateTimeUnspecified().ToShortTimeString();
 
             bool isDaytime = currentTime > sunrise && currentTime < sunset;
 
-            return Tuple.Create(displayDate, displayTime, isDaytime);
+            return Tuple.Create(displayDay, displayMonth, displayDate, displayYear, displayTime, isDaytime);
         }
     }
 }
