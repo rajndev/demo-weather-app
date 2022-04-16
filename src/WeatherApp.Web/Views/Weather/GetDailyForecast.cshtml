@@ -1,0 +1,61 @@
+﻿@model CurrentWeatherViewModel
+@inject IWeatherService weatherService
+
+@{
+    ViewData["Title"] = "Daily Forecast";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewData["isCityNotFound"] != null && (bool)ViewData["isCityNotFound"])
+{
+    <div class="text-center" style="margin-top: 80px;">
+        <h1 class="display-4">That city name was not found in our database!</h1>
+        <img src="~/images/sunshine.jpg" alt="Sunshine" width="350" style="margin-top: 80px;" />
+    </div>
+}
+@if (ViewData["isInvalidCityName"] != null && (bool)ViewData["isInvalidCityName"])
+{
+    <div class="text-center" style="margin-top: 80px;">
+        <h1 class="display-4">Please use a valid city name!</h1>
+        <img src="~/images/sunshine.jpg" alt="Sunshine" width="350" style="margin-top: 80px;" />
+    </div>
+}
+else if (ViewData["isApiLimitReached"] != null && (bool)ViewData["isApiLimitReached"])
+{
+    <div class="text-center" style="margin-top: 80px;">
+        <h1 class="display-4">The application has reached the maximum weather API request limit. <br /><br />Please try again later.</h1>
+        <img src="~/images/sunshine.jpg" alt="Sunshine" width="350" style="margin-top: 80px;" />
+    </div>
+}
+else if (ViewData["isApiServiceProblem"] != null && (bool)ViewData["isApiServiceProblem"])
+{
+    <div class="text-center" style="margin-top: 80px;">
+        <h1 class="display-4">There was a problem with your request. <br /><br />Please try again later.</h1>
+        <img src="~/images/sunshine.jpg" alt="Sunshine" width="350" style="margin-top: 80px;" />
+    </div>
+}
+else
+{
+    <div class="container">
+      
+    <h1 style="font-family: Calibri; text-align: center; font-weight: bold; ">8 Day Forecast for @Model.CityName</h1>
+
+    <div class="weather-forecast">
+        @foreach (var day in @Model.Daily)
+        {
+            var date = weatherService.GetZoneDateTime(@Model.TimeZone, @day.Dt);
+
+        <div class="weather-forecast-item">
+            <div class="day">@date.Item1, @date.Item2 @date.Item3</div>
+            <br>
+            <span>
+                @day.Weather[0].Description
+            </span>
+            <img src="http://openweathermap.org/img/wn/@{@day.Weather[0].Icon}@@2x.png" alt="" />
+            <div class="temp">Day <span style="color: gray">@day.Temp.Day&#176; F</span></div>
+            <div class="temp">Night <span style="color: gray">@day.Temp.Night&#176; F</span></div>
+        </div>
+        }
+    </div>
+</div>
+}
