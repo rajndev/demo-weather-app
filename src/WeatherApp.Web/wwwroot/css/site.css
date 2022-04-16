@@ -136,3 +136,9 @@ body {
     font-weight: 500;
     font-size: 12px;
 }
+
+@media (max-width: 768px) {
+    .weather-forecast {
+        flex-direction: column;
+    }
+}

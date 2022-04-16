@@ -5,39 +5,39 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>GetDailyForecast</h1>
-
   <div class="container">
+      
+    <h1 style="font-family: Calibri; text-align: center; font-weight: bold; ">8 Day Forecast</h1>
 
     <div class="future-forecast">
 
         <div class="weather-forecast" id="weather-forecast">
             <div class="weather-forecast-item">
-                <div class="day">Tue, Apr 30</div>
+                <div class="day">Tue, Apr 10</div>
                 <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
                 <div class="temp">Night - 25.6&#176; C</div>
                 <div class="temp">Day - 35.6&#176; C</div>
             </div>
             <div class="weather-forecast-item">
-                <div class="day">Wed</div>
+                <div class="day">Wed, Apr 11</div>
                 <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
                 <div class="temp">Night - 25.6&#176; C</div>
                 <div class="temp">Day - 35.6&#176; C</div>
             </div>
             <div class="weather-forecast-item">
-                <div class="day">Thur</div>
+                <div class="day">Thur, Apr 12</div>
                 <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
                 <div class="temp">Night - 25.6&#176; C</div>
                 <div class="temp">Day - 35.6&#176; C</div>
             </div>
             <div class="weather-forecast-item">
-                <div class="day">Fri</div>
+                <div class="day">Fri, Apr 13</div>
                 <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
                 <div class="temp">Night - 25.6&#176; C</div>
                 <div class="temp">Day - 35.6&#176; C</div>
             </div>
             <div class="weather-forecast-item">
-                <div class="day">Sat</div>
+                <div class="day">Sat, Apr 14</div>
                 <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="weather icon" class="w-icon">
                 <div class="temp">Night - 25.6&#176; C</div>
                 <div class="temp">Day - 35.6&#176; C</div>
@@ -45,74 +45,4 @@
 
         </div>
     </div>
-
-@*<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Dt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Sunrise)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Sunset)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Moonrise)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Moonset)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Pressure)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Humidity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Wind_speed)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Dt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sunrise)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sunset)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Moonrise)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Moonset)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Pressure)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Humidity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Wind_speed)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
-*@
+</div>
