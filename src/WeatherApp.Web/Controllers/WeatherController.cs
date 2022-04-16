@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WeatherApp.Common.Models;
@@ -96,8 +97,18 @@ namespace WeatherApp.Web.Controllers
             }
         }
 
-        public IActionResult GetDailyForecast()
+        public async Task<IActionResult> GetDailyForecast(string cityName)
         {
+            if (ModelState.IsValid)
+            {
+                CurrentWeatherViewModel weatherViewModel;
+                ProviderResult<WeatherData> apiResponseDto;
+
+                apiResponseDto = await _weatherService.GetCurrentWeather(cityName);
+                weatherViewModel = _mapper.Map<CurrentWeatherViewModel>(apiResponseDto);
+                return View(weatherViewModel);
+            }
+
             return View();
         }
 

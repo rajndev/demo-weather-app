@@ -109,6 +109,7 @@ body {
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .weather-forecast-item {
@@ -118,7 +119,7 @@ body {
     justify-content: center;
     border: 1px solid green;
     width: 160px;
-    padding: 15px;
+    height: 250px;
     margin: 10px;
     border-radius: 10px;
     background-color: rgba(78, 178, 74, 0.3);

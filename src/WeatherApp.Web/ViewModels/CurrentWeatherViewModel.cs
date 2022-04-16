@@ -14,6 +14,6 @@ namespace WeatherApp.Web.ViewModels
         public string Icon { get; set; }
         public int Temperature { get; set; }
         public string ViewErrorToken { get; set; }
-        public List<DailyDayForecat> DailyForecast { get; set; }
+        public List<DailyDayForecat> Daily { get; set; }
     }
 }

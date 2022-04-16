@@ -54,7 +54,7 @@ else
             <div class="card-body">
 
                 <p class="card-text">
-                    <a asp-controller="Weather" asp-action="GetDailyForecast"><span style="float: left; color: gray; font-weight: bold; font-size: 17px"><i class="bi bi-brightness-high-fill"></i> 8 Day Forecast</span></a>
+                    <a asp-controller="Weather" asp-action="GetDailyForecast" asp-route-cityname="@Model.CityName"><span style="float: left; color: gray; font-weight: bold; font-size: 17px"><i class="bi bi-brightness-high-fill"></i> 8 Day Forecast</span></a>
                     <span style="font-weight: bold;float: right;font-size: 17px">@Model.CityTime</span>
                     <br />
                     <br />
