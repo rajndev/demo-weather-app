@@ -6,7 +6,7 @@ namespace WeatherApp.ApiClient.Interfaces
 {
     public interface IOpenWeatherMapApiService
     {
-        [Get("/onecall?lat={lat}&lon={lon}&appid={apiKey}&units=imperial")]
+        [Get("/onecall?lat={lat}&lon={lon}&exclude=hourly,minutely,alterts&appid={apiKey}&units=imperial")]
         public Task<ApiResponse<WeatherData>> GetWeatherInfo(string lat, string lon, string apiKey);
     }
 }

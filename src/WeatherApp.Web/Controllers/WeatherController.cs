@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WeatherApp.Common.Models;
@@ -69,31 +70,70 @@ namespace WeatherApp.Web.Controllers
 
             var apiResponseDto = JsonConvert.DeserializeObject<ProviderResult<WeatherData>>(storedResults);
 
-            if (apiResponseDto.StatusCode == (int)StatusCodes.NotFound)
+            if (apiResponseDto.StatusCode != (int)StatusCodes.Success)
             {
-                errorViewModel.ViewErrorToken = "Not found";
+                if (apiResponseDto.StatusCode == (int)StatusCodes.NotFound)
+                {
+                    errorViewModel.ViewErrorToken = "Not found";
+                }
+                else if (apiResponseDto.StatusCode == (int)StatusCodes.BadRequest)
+                {
+                    errorViewModel.ViewErrorToken = "Invalid city name";
+                }
+                else if (apiResponseDto.StatusCode == (int)StatusCodes.Conflict)
+                {
+                    errorViewModel.ViewErrorToken = "Api limit reached";
+                }
+                else if (apiResponseDto.StatusCode == (int)StatusCodes.Unauthorized)
+                {
+                    errorViewModel.ViewErrorToken = "Api service problem";
+                }
+
                 return View(errorViewModel);
             }
-            else if (apiResponseDto.StatusCode == (int)StatusCodes.BadRequest)
+
+            var currentWeatherViewModel = _mapper.Map<CurrentWeatherViewModel>(apiResponseDto);
+            return View(currentWeatherViewModel);
+        }
+
+        public async Task<IActionResult> GetDailyForecast(string cityName)
+        {
+            if (!string.IsNullOrEmpty(cityName))
             {
-                errorViewModel.ViewErrorToken = "Invalid city name";
-                return View(errorViewModel);
+                CurrentWeatherViewModel weatherViewModel;
+                ProviderResult<WeatherData> apiResponseDto;
+
+                apiResponseDto = await _weatherService.GetCurrentWeather(cityName);
+
+                if (apiResponseDto.StatusCode != (int)StatusCodes.Success)
+                {
+                    if (apiResponseDto.StatusCode == (int)StatusCodes.NotFound)
+                    {
+                        ViewData["isCityNotFound"] = true;
+                    }
+                    else if (apiResponseDto.StatusCode == (int)StatusCodes.BadRequest)
+                    {
+                        ViewData["isInvalidCityName"] = true;
+                    }
+                    else if (apiResponseDto.StatusCode == (int)StatusCodes.Conflict)
+                    {
+                        ViewData["isApiLimitReached"] = true;
+                    }
+                    else if (apiResponseDto.StatusCode == (int)StatusCodes.Unauthorized)
+                    {
+                        ViewData["isApiServiceProblem"] = true;
+                    }
+                    return View();
+                }
+                else
+                {
+                    weatherViewModel = _mapper.Map<CurrentWeatherViewModel>(apiResponseDto);
+                    return View(weatherViewModel);
+                }
             }
-            else if (apiResponseDto.StatusCode == (int)StatusCodes.Conflict)
-            {
-                errorViewModel.ViewErrorToken = "Api limit reached";
-                return View(errorViewModel);
-            }
-            else if (apiResponseDto.StatusCode == (int)StatusCodes.Unauthorized)
-            {
-                errorViewModel.ViewErrorToken = "Api service problem";
-                return View(errorViewModel);
-            }
-            else
-            {
-                var currentWeatherViewModel = _mapper.Map<CurrentWeatherViewModel>(apiResponseDto);
-                return View(currentWeatherViewModel);
-            }
+
+            ViewData["isInvalidCityName"] = true;
+            return View();
         }
 
         [HttpPost]
