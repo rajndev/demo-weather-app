@@ -15,7 +15,7 @@ namespace WeatherApp.ApiClient.DependencyInjection
 
             var apiHost = config.GetSection("OpenWeatherMapApiOptions:ApiHost").Value;
 
-            services.AddRefitClient<IOpenWeatherAppApiService>()
+            services.AddRefitClient<IOpenWeatherMapApiService>()
                 .ConfigureHttpClient(client =>
                 {
                     client.BaseAddress = new Uri(apiHost);
