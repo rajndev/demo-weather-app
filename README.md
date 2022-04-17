@@ -9,7 +9,7 @@ This is a demo weather app built using C# and ASP.NET Core MVC. It displays the 
 ## Screenshot:
 
 <p align="center"> 
-  <img width=346 src="https://user-images.githubusercontent.com/19508650/136658509-467c48d9-7e15-4734-9fbe-b884d8cdecf6.jpg">
+  <img width=346 src="https://user-images.githubusercontent.com/19508650/163697260-b703d255-6f90-46fc-ac7f-b5e62c1baeee.png">
 </p>
 
 <!-- <p align="center">
