@@ -17,14 +17,14 @@ namespace WeatherApp.Provider
     {
         private readonly IMapper _mapper;
         private readonly ApplicationDbContext _context;
-        private readonly IOpenWeatherAppApiService _apiService;
+        private readonly IOpenWeatherMapApiService _apiService;
         private readonly ApiOptions _options;
 
         public WeatherServiceProvider(
                 IMapper mapper,
                 ApplicationDbContext context,
                 IConfiguration config,
-                IOpenWeatherAppApiService apiService,
+                IOpenWeatherMapApiService apiService,
                 IOptions<ApiOptions> options
             )
         {
