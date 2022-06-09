@@ -363,6 +363,7 @@ MigrationBackup/
 
 # Ignore local appsettings files
 *.Local.json
+*.Production.json
 
 # Publish folder
 %USERPROFILE%/
