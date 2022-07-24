@@ -30,4 +30,3 @@ To search for the current weather conditions for a city of interest, enter the c
 **Visual Studio extensions:** Productivity Power Tools, CodeMaid, Github extension for Visual Studio 2019, Snippet Designer, and Web Essentials.
 
 [Click here](https://weatherappraj.azurewebsites.net) for a live demo of the project.
-
